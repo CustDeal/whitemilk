@@ -297,6 +297,59 @@ if (isset($_GET['table']) && $_GET['table'] == 'subcategory') {
     print_r(json_encode($bulkData));
 }
 
+// data of 'branchmaster' table goes here
+if (isset($_GET['table']) && $_GET['table'] == 'branchmaster') {
+
+    $offset = 0;
+    $limit = 10;
+    $sort = 'BranchID';
+    $order = 'DESC';
+    $where = '';
+    if (isset($_GET['offset']))
+        $offset = $db->escapeString($fn->xss_clean($_GET['offset']));
+    if (isset($_GET['limit']))
+        $limit = $db->escapeString($fn->xss_clean($_GET['limit']));
+
+    if (isset($_GET['sort']))
+        $sort = $db->escapeString($fn->xss_clean($_GET['sort']));
+    if (isset($_GET['order']))
+        $order = $db->escapeString($fn->xss_clean($_GET['order']));
+
+    if (isset($_GET['search'])) {
+        $search = $db->escapeString($fn->xss_clean($_GET['search']));
+        $where = " Where s.`id` like '%" . $search . "%' OR `name` like '%" . $search . "%' OR `subtitle` like '%" . $search . "%' OR `image` like '%" . $search . "%'";
+    }
+
+
+$connect_db = mysqli_connect(DB_SERVER,DB_USERNAME,DB_PASSWORD,DB_DATABASE);
+if ($connect_db->connect_error) {
+    die("Connection failed: ". $connect_db->connect_error);
+    echo("DataBase Is Not Connected");
+}
+$get_product_user_group2 = mysqli_query($connect_db, "SELECT * FROM branch_register ");
+
+    $bulkData = array();
+    $bulkData['total'] = mysqli_num_rows($get_product_user_group2);
+    $rows = array();
+    $tempRow = array();
+
+	while($row = mysqli_fetch_array($get_product_user_group2))
+	{
+        $operate = ' <a href="edit-branchmaster.php?id=' . $row['BranchID'] . '"><i class="fa fa-edit"></i>Edit</a>';
+        $operate .= ' <a class="btn-xs btn-danger" href="delete-branchmaster.php?id=' . $row['BranchID'] . '"><i class="fa fa-trash-o"></i>Delete</a>';
+        $tempRow['BranchID'] = $row['BranchID'];
+        $tempRow['BranchName'] = $row['BranchName'];
+        $tempRow['Address'] = $row['Address'];
+        $tempRow['City'] = $row['City'];
+        $tempRow['ContactPerson'] = $row['ContactPerson'];
+        $tempRow['ContactNumber'] =$row['ContactNumber'];
+        $tempRow['operate'] = $operate;
+        $rows[] = $tempRow;
+    }
+    $bulkData['rows'] = $rows;
+    print_r(json_encode($bulkData));
+}
+
 // data of 'PRODUCTS' table goes here
 
 if (isset($_GET['table']) && $_GET['table'] == 'products') {

@@ -243,6 +243,19 @@ $res_logo = $db->getResult();
                         <i class="fa fa-bullseye"></i> <span>Sub Categories</span>
                     </a>
                 </li>
+				
+                    <li class="treeview">
+                        <a href="#">
+                            <i class="fa fa-bullseye"></i>
+                            <span>Branch Master</span>
+                            <i class="fa fa-angle-right pull-right"></i>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="add-branchmaster.php"><i class="fa fa-plus"></i> Add Branch Master</a></li>
+                            <li><a href="branchmaster.php"><i class="fa fa-sliders"></i> Manage Branch Master</a></li>
+                           
+                        </ul>
+                    </li>
 
                 <li class="treeview">
                     <a href="#">

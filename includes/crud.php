@@ -5,7 +5,24 @@
  * @Package Database
  */
 
-define('DOMAIN_URL', 'https://mainadminpanel.whitemilk.in/'); /* chnage to your domain here - don't forget to add forward slash at the end of the URL like this "/" */
+if($_SERVER['HTTP_HOST']=="localhost")
+{
+define('DB_SERVER', 'localhost');
+define('DB_USERNAME', 'root');
+define('DB_PASSWORD', '');
+define('DB_DATABASE', 'whitemilk');
+define('DOMAIN_URL', 'http://localhost/whitemilk/');
+
+}
+else{
+define('DB_SERVER', 'localhost');
+define('DB_USERNAME', 'vhujkggq_sindwhitemilk_User');
+define('DB_PASSWORD', 'Nithish@1975');
+define('DB_DATABASE', 'vhujkggq_SindestWhitemilk_DB');
+define('DOMAIN_URL', 'https://mainadminpanel.whitemilk.in/');
+}
+
+ /* chnage to your domain here - don't forget to add forward slash at the end of the URL like this "/" */
 define('ALLOW_MODIFICATION', 1);
 define('JWT_SECRET_KEY', 'Nithish@4u'); /* chnage to your secret key here set it to anything you like*/
 
@@ -17,11 +34,18 @@ class Database
      * means that they will only be available with the 
      * Database class
      */
+	 
+	private $db_host = "localhost";  // Change as required
+    private $db_user = "root";  // Change as required
+    private $db_pass = "";  // Change as required
+    private $db_name = "whitemilk";    // Change as required
 
-    private $db_host = "localhost";  // Change as required
+/*    
+	private $db_host = "localhost";  // Change as required
     private $db_user = "vhujkggq_sindwhitemilk_User";  // Change as required
     private $db_pass = "Nithish@1975";  // Change as required
     private $db_name = "vhujkggq_SindestWhitemilk_DB";    // Change as required
+*/
 
     /*
      * Extra variables that are required by other function such as boolean con variable
