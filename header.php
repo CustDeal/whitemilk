@@ -209,8 +209,21 @@ $res_logo = $db->getResult();
             <!-- sidebar: style can be found in sidebar.less -->
             <section class="sidebar">
             <?php } ?>
+			
+
 
             <ul class="sidebar-menu">
+			<?php if($role==="POS"){?>
+                <li class="treeview">
+                    <a href="orders.php">
+                        <i class="fa fa-shopping-cart"></i>
+                        <span>Orders</span>
+                    </a>
+                </li>
+			
+			<?PHP }?>			
+			<?php if($role == 'admin' || $role == 'super admin'){?>
+
                 <li class="treeview">
                     <a href="home.php">
                         <i class="fa fa-home" class="active"></i> <span>Home</span>
@@ -253,6 +266,20 @@ $res_logo = $db->getResult();
                         <ul class="treeview-menu">
                             <li><a href="add-branchmaster.php"><i class="fa fa-plus"></i> Add Branch Master</a></li>
                             <li><a href="branchmaster.php"><i class="fa fa-sliders"></i> Manage Branch Master</a></li>
+                           
+                        </ul>
+                    </li>
+					
+                    <li class="treeview">
+                        <a href="#">
+                            <i class="fa fa-bullseye"></i>
+                            <span>Stock Transfer</span>
+                            <i class="fa fa-angle-right pull-right"></i>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="add-stock-transfer.php"><i class="fa fa-plus"></i> Add StockTransfer</a></li>
+							 <li><a href="branchwise-stock-updation.php"><i class="fa fa-plus"></i> Update Branchwise Stock</a></li>
+                            <li><a href="stocktransfer.php"><i class="fa fa-sliders"></i> Manage StockTransfer</a></li>
                            
                         </ul>
                     </li>
@@ -460,7 +487,8 @@ $res_logo = $db->getResult();
                         <?php    } ?>
                     </a>
                 </li>
-                <?php
+			<?PHP } ?>
+				<?php
                 if ($role == 'admin' || $role == 'super admin') {
                 ?>
                     <li class="treeview">

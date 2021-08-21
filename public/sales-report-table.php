@@ -30,6 +30,14 @@
                                 <input type="hidden" id="start_date" name="start_date">
                                 <input type="hidden" id="end_date" name="end_date">
                             </div>
+						<div class="form-group">
+						<label for="txt_type">Select Type</label> <i class="text-danger asterik">*</i>
+						<select id="txt_type" name="txt_type" placeholder="Select Type" class="form-control" onchange="hideShowDiv()">
+						<option value="0" <?php if($res[0]['type']==="0"){ echo " selected "; }?>>Branch</option>
+						<option value='1' <?php if($res[0]['type']==="1"){ echo " selected "; }?>>POS</option>
+						</select>
+
+						</div>
                         </form>
                     </div>
 

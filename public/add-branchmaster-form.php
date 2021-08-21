@@ -16,6 +16,9 @@ if (isset($_POST['btnAdd'])) {
         $ContactPerson = $db->escapeString($fn->xss_clean($_POST['ContactPerson']));
         $Address = $db->escapeString($fn->xss_clean($_POST['Address']));
 		$ContactNumber = $db->escapeString($fn->xss_clean($_POST['ContactNumber']));
+		$txt_type = $db->escapeString($fn->xss_clean($_POST['txt_type']));
+		$txt_username = $db->escapeString($fn->xss_clean($_POST['txt_username']));
+		$txt_password = $db->escapeString($fn->xss_clean($_POST['txt_password']));
       
         // create array variable to handle error
         $error = array();
@@ -39,11 +42,28 @@ if (isset($_POST['btnAdd'])) {
 		if (empty($ContactNumber)) {
             $error['ContactNumber'] = " <span class='label label-danger'>Required!</span>";
         }
+		
+		if($txt_type==="1")
+		{
+			if (empty($txt_username)) {
+				$error['txt_username'] = " <span class='label label-danger'>Required!</span>";
+			}
+			
+			if (empty($txt_password)) {
+				$error['txt_password'] = " <span class='label label-danger'>Required!</span>";
+			}
+			
+		}
+		else
+		{
+			$txt_username=null;
+			$txt_password=null;
+		}
        
         if (!empty($BranchName) && !empty($City) && !empty($ContactPerson) && !empty($ContactNumber) && !empty($Address)) {
            
             // insert new data to product table
-            $sql = "INSERT INTO `Branch_Register`(`BranchName`, `Address`, `City`, `ContactPerson`, `ContactNumber`) VALUES ('$BranchName','$Address','$City','$ContactPerson','$ContactNumber')";
+            $sql = "INSERT INTO `Branch_Register`(`BranchName`, `Address`, `City`, `ContactPerson`, `ContactNumber`, `type`) VALUES ('$BranchName','$Address','$City','$ContactPerson','$ContactNumber','$txt_type')";
             // echo $sql;
             $db->sql($sql);
             $branch_master_result = $db->getResult();
@@ -51,6 +71,21 @@ if (isset($_POST['btnAdd'])) {
                 $branch_master_result = 0;
             } else {
                 $branch_master_result = 1;
+				$last_id = $db->getLast();
+
+			if(!empty($txt_username && !empty($txt_password)) ){
+				$d_password = md5($txt_password);
+				$per = '{"orders":{"create":"1","read":"1","update":"1","delete":"1"},"categories":{"create":"1","read":"1","update":"1","delete":"1"},"subcategories":{"create":"1","read":"1","update":"1","delete":"1"},"products":{"create":"1","read":"1","update":"1","delete":"1"},"products_order":{"read":"1","update":"1"},"featured":{"create":"1","read":"1","update":"1","delete":"1"},"customers":{"read":"1"},"payment":{"read":"1","update":"1"},"notifications":{"create":"1","read":"1","delete":"1"},"transactions":{"read":"1"},"settings":{"read":"1","update":"1"},"locations":{"create":"1","read":"1","update":"1","delete":"1"},"reports":{"create":"1","read":"1"},"faqs":{"create":"1","read":"1","update":"1","delete":"1"},"home_sliders":{"create":"1","read":"1","delete":"1"},"new_offers":{"create":"1","read":"1","delete":"1"},"promo_codes":{"create":"1","read":"1","update":"1","delete":"1"},"delivery_boys":{"create":"1","read":"1","update":"1","delete":"1"},"return_requests":{"read":"1","update":"1","delete":"1"}}';
+				$role = "POS";
+				$email = "pos@pos.com";
+				$created_by = "0";
+				$sql = "INSERT INTO `admin`(`username`, `password`, `email`, `role`, `permissions`, `created_by`,`branch_id`) VALUES ('$txt_username','$d_password','$email','$role','$per','$created_by','$last_id')";
+            // echo $sql;
+            $db->sql($sql);
+            $admin_user = $db->getResult();
+				
+				
+			}
             }
             if ($branch_master_result == 1) {
                 $error['add_menu'] = "<section class='content-header'>
@@ -135,6 +170,31 @@ if (isset($_POST['btnAdd'])) {
                             </div>
                            
                             </div>
+						<div class="form-group">
+						<div class='col-md-4'>
+						<label for="txt_type">Select Type</label> <i class="text-danger asterik">*</i>
+						<select id="txt_type" name="txt_type" placeholder="Select Type" required class="form-control" onchange="hideShowDiv()">
+						<option value="0">Branch</option>
+						<option value='1'>POS</option>
+						</select>
+
+						</div>
+						</div>
+						
+							<div class="form-group" id="usern" style="display:none;">
+                            <div class='col-md-4'>
+                                <label for="txt_username">UserName</label> <i class="text-danger asterik">*</i><?php echo isset($error['txt_username']) ? $error['txt_username'] : ''; ?>
+                                <input type="text" class="form-control" name="txt_username" id="txt_username" >
+                            </div>
+                            </div>
+							
+							<div class="form-group" id="passw"  style="display:none;">
+                            <div class='col-md-4'>
+                                <label for="txt_password">Password</label> <i class="text-danger asterik">*</i><?php echo isset($error['txt_password']) ? $error['txt_password'] : ''; ?>
+                                <input type="text" class="form-control" name="txt_password" id="txt_password" >
+                            </div>
+                            </div>
+						
                         </div>
                         <hr>
                         
@@ -239,4 +299,20 @@ if (isset($_POST['btnAdd'])) {
     //         alert('You Can not enter amount less than zero.');
     //     }
     // }
+</script>
+
+<script>
+function hideShowDiv() {
+  var x = document.getElementById("txt_type").value;
+  var y = document.getElementById("usern");
+  var z = document.getElementById("passw");
+
+  if (x === "1") {
+    y.style.display = "block";
+    z.style.display = "block";
+  } else {
+    y.style.display = "none";
+    z.style.display = "none";
+  }
+}
 </script>

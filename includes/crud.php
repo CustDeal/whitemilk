@@ -302,4 +302,9 @@ class Database
     {
         return $this->myconn->real_escape_string($data);
     }
+	
+    public function getLast()
+    {
+        return $this->myconn->insert_id;
+    }
 }

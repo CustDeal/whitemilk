@@ -36,6 +36,7 @@
                             <th data-field="City" data-sortable="true">City</th>
                             <th data-field="ContactPerson">Contact Person</th>
                             <th data-field="ContactNumber">Contact Number</th>
+                            <th data-field="Type">Type</th>
                             <th data-field="operate">Action</th>
                         </tr>
 						</thead>

@@ -48,13 +48,34 @@ if (isset($_POST['btnLogin'])) {
             $_SESSION['id'] = $res[0]['id'];
             $_SESSION['role'] = $res[0]['role'];
             $_SESSION['user'] = $username;
-            $_SESSION['email'] = $res[0]['email'];;
+            $_SESSION['email'] = $res[0]['email'];
             $_SESSION['timeout'] = $currentTime + $expired;
 
             header("location: home.php");
-        } else {
-            $error['failed'] = "<span class='label label-danger'>Invalid Username or Password!</span>";
         }
+		else{
+			        // get data from user table
+        $sql_query = "SELECT * FROM branch_register WHERE username = '" . $username . "' AND password = '" . $password . "' AND type='1'";
+
+        $db->sql($sql_query);
+        /* store result */
+        $res = $db->getResult();
+        $num = $db->numRows($res);
+        // Close statement object
+        if ($num == 1) {
+            $_SESSION['id'] = $res[0]['BranchID'];
+            $_SESSION['role'] = "super admin";
+            $_SESSION['user'] = $username;
+            $_SESSION['email'] = "pos@pos.com";
+            $_SESSION['timeout'] = $currentTime + $expired;
+
+            header("location: home.php");
+        }
+		else
+		{
+			$error['failed'] = "<span class='label label-danger'>Invalid Username or Password!</span>";
+		}
+		}
     }
 }
 ?>

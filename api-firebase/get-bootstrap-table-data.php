@@ -49,143 +49,186 @@ if (!$time_zone) {
 
 //data of 'ORDERS' table goes here
 if (isset($_GET['table']) && $_GET['table'] == 'orders') {
-    $offset = 0;
-    $limit = 10;
-    $sort = 'o.id';
-    $order = 'DESC';
-    $where = ' ';
-    if (!empty($_GET['start_date']) && !empty($_GET['end_date'])) {
-        $start_date = $db->escapeString($fn->xss_clean($_GET['start_date']));
-        $end_date = $db->escapeString($fn->xss_clean($_GET['end_date']));
-        $where .= " where DATE(date_added)>=DATE('" . $start_date . "') AND DATE(date_added)<=DATE('" . $end_date . "')";
-    }
-    if (isset($_GET['sort']))
-        $sort = $db->escapeString($fn->xss_clean($_GET['sort']));
-    if (isset($_GET['offset']))
-        $offset = $db->escapeString($fn->xss_clean($_GET['offset']));
-    if (isset($_GET['limit']))
-        $limit = $db->escapeString($fn->xss_clean($_GET['limit']));
-    if (isset($_GET['order']))
-        $order = $db->escapeString($fn->xss_clean($_GET['order']));
-    if (isset($_GET['search']) && !empty($_GET['search'])) {
-        $search = $db->escapeString($fn->xss_clean($_GET['search']));
-        if (!empty($_GET['start_date']) && !empty($_GET['end_date'])) {
-            $where .= " AND (name like '%" . $search . "%' OR o.id like '%" . $search . "%' OR o.mobile like '%" . $search . "%' OR address like '%" . $search . "%' OR `payment_method` like '%" . $search . "%' OR `delivery_charge` like '%" . $search . "%' OR `delivery_time` like '%" . $search . "%' OR o.`status` like '%" . $search . "%' OR `date_added` like '%" . $search . "%')";
-        } else {
-            $where .= " where (name like '%" . $search . "%' OR o.id like '%" . $search . "%' OR o.mobile like '%" . $search . "%' OR address like '%" . $search . "%' OR `payment_method` like '%" . $search . "%' OR `delivery_charge` like '%" . $search . "%' OR `delivery_time` like '%" . $search . "%' OR o.`status` like '%" . $search . "%' OR `date_added` like '%" . $search . "%')";
-        }
-    }
-    if (isset($_GET['filter_order']) && $_GET['filter_order'] != '') {
-        $filter_order = $db->escapeString($fn->xss_clean($_GET['filter_order']));
-        if (isset($_GET['search']) && $_GET['search'] != '') {
-            $where .= " and `active_status`='" . $filter_order . "'";
-        } elseif (isset($_GET['start_date']) && $_GET['start_date'] != '') {
-            $where .= " and `active_status`='" . $filter_order . "'";
-        } else {
-            $where .= " where `active_status`='" . $filter_order . "'";
-        }
-    }
-    $sql = "SELECT COUNT(o.id) as total FROM `orders` o JOIN users u ON u.id=o.user_id" . $where;
-    $db->sql($sql);
-    $res = $db->getResult();
-    foreach ($res as $row) {
-        $total = $row['total'];
-    }
-    $sql = "select o.*,u.name FROM orders o JOIN users u ON u.id=o.user_id" . $where . " ORDER BY " . $sort . " " . $order . " LIMIT " . $offset . ", " . $limit;
-    $db->sql($sql);
-    $res = $db->getResult();
-    for ($i = 0; $i < count($res); $i++) {
-        $sql = "select oi.*,p.name as name, u.name as uname,v.measurement, (SELECT short_code FROM unit un where un.id=v.measurement_unit_id)as mesurement_unit_name,(SELECT status FROM orders o where o.id=oi.order_id)as order_status from `order_items` oi 
+	$offset = 0;
+	$limit = 10;
+	$sort = 'o.id';
+	$order = 'DESC';
+	$where = ' ';
+	if (!empty($_GET['start_date']) && !empty($_GET['end_date'])) {
+		$start_date = $db->escapeString($fn->xss_clean($_GET['start_date']));
+		$end_date = $db->escapeString($fn->xss_clean($_GET['end_date']));
+		
+		if(!empty($_GET['branch_id']))
+		{
+			$branch_id = $db->escapeString($fn->xss_clean($_GET['branch_id']));
+			if($branch_id=="All")
+			{
+				$where .= " where DATE(date_added)>=DATE('" . $start_date. "') AND DATE(date_added)<=DATE('" . $end_date. "')";
+			}
+			else
+			{
+				$where .= " where DATE(date_added)>=DATE('" . $start_date. "') AND DATE(date_added)<=DATE('" . $end_date. "') AND BranchID='".$branch_id."' ";
+			}
+		}
+		else
+		{
+			$where .= " where DATE(date_added)>=DATE('" . $start_date. "') AND DATE(date_added)<=DATE('" . $end_date. "')";
+		}
+	}
+	else
+	{
+		if(!empty($_GET['branch_id']))
+		{
+			$branch_id = $db->escapeString($fn->xss_clean($_GET['branch_id']));
+			if($branch_id!="All")
+			{
+				$where .= " where BranchID='".$branch_id."' ";
+			}
+		}
+	}
+	
+	if (isset($_GET['sort']))
+		$sort = $db->escapeString($fn->xss_clean($_GET['sort']));
+	if (isset($_GET['offset']))
+		$offset = $db->escapeString($fn->xss_clean($_GET['offset']));
+	if (isset($_GET['limit']))
+		$limit = $db->escapeString($fn->xss_clean($_GET['limit']));
+	if (isset($_GET['order']))
+		$order = $db->escapeString($fn->xss_clean($_GET['order']));
+	if (isset($_GET['search']) && !empty($_GET['search'])) {
+		$search = $db->escapeString($fn->xss_clean($_GET['search']));
+		if (!empty($_GET['start_date']) && !empty($_GET['end_date'])) {
+			$where .= " AND (name like '%" . $search . "%' OR o.id like '%" . $search . "%' OR o.mobile like '%" . $search . "%' OR address like '%" . $search . "%' OR `payment_method` like '%" . $search . "%' OR `delivery_charge` like '%" . $search . "%' OR `delivery_time` like '%" . $search . "%' OR o.`status` like '%" . $search . "%' OR `date_added` like '%" . $search . "%')";
+		} else {
+			$where .= " where (name like '%" . $search . "%' OR o.id like '%" . $search . "%' OR o.mobile like '%" . $search . "%' OR address like '%" . $search . "%' OR `payment_method` like '%" . $search . "%' OR `delivery_charge` like '%" . $search . "%' OR `delivery_time` like '%" . $search . "%' OR o.`status` like '%" . $search . "%' OR `date_added` like '%" . $search . "%')";
+		}
+	}
+	if (isset($_GET['filter_order']) && $_GET['filter_order'] != '') {
+		$filter_order = $db->escapeString($fn->xss_clean($_GET['filter_order']));
+		if (isset($_GET['search']) && $_GET['search'] != '') {
+			$where .= " and `active_status`='" . $filter_order . "'";
+		} elseif (isset($_GET['start_date']) && $_GET['start_date'] != '') {
+			$where .= " and `active_status`='" . $filter_order . "'";
+		} else {
+			$where .= " where `active_status`='" . $filter_order . "'";
+		}
+	}
+	$sql = "SELECT COUNT(o.id) as total FROM `orders` o JOIN users u ON u.id=o.user_id" . $where;
+	$db->sql($sql);
+	$res = $db->getResult();
+	foreach ($res as $row) {
+		$total = $row['total'];
+	}
+	$sql = "select o.*,u.name FROM orders o JOIN users u ON u.id=o.user_id" . $where . " ORDER BY " . $sort . " " . $order . " LIMIT " . $offset . ", " . $limit;
+	$db->sql($sql);
+	$res = $db->getResult();
+	
+	
+	for ($i = 0; $i < count($res); $i++) {
+		$sql = "select oi.*,p.name as name, u.name as uname,v.measurement, (SELECT short_code FROM unit un where un.id=v.measurement_unit_id)as mesurement_unit_name,(SELECT status FROM orders o where o.id=oi.order_id)as order_status from `order_items` oi 
 			    left join product_variant v on oi.product_variant_id=v.id 
 			    left join products p on p.id=v.product_id 
 			    left join users u ON u.id=oi.user_id
 			    where oi.order_id=" . $res[$i]['id'];
-        $db->sql($sql);
-        $res[$i]['items'] = $db->getResult();
-    }
-    $bulkData = array();
-    $bulkData['total'] = $total;
-    $rows = array();
-    $tempRow = array();
-    foreach ($res as $row) {
-        $items = $row['items'];
-        $items1 = '';
-        $temp = '';
-        $total_amt = 0;
-        foreach ($items as $item) {
-            $temp .= "<b>Item ID :</b>" . $item['id'] . "<b> Product Variant Id :</b> " . $item['product_variant_id'] . "<b> Name : </b>" . $item['name'] . " <b>Unit : </b>" . $item['measurement'] . $item['mesurement_unit_name'] . " <b>Price : </b>" . $item['price'] . " <b>QTY : </b>" . $item['quantity'] . " <b>Subtotal : </b>" . $item['quantity'] * $item['price'] . "<br>------<br>";
-            $total_amt += $item['sub_total'];
-        }
-        $items1 = $temp;
-        $temp = '';
-        $status = json_decode($row['items'][0]['order_status']);
-        if (!empty($status)) {
-            foreach ($status as $st) {
-                $temp .= $st[0] . " : " . $st[1] . "<br>------<br>";
-            }
-        }
-        if ($row['active_status'] == 'received') {
-            $active_status = '<label class="label label-primary">' . $row['active_status'] . '</label>';
-        }
-        if ($row['active_status'] == 'awaiting_payment') {
-            $active_status = '<label class="label label-secondary">Awaiting Payment</label>';
-        }
-        if ($row['active_status'] == 'processed') {
-            $active_status = '<label class="label label-info">' . $row['active_status'] . '</label>';
-        }
-        if ($row['active_status'] == 'shipped') {
-            $active_status = '<label class="label label-warning">' . $row['active_status'] . '</label>';
-        }
-        if ($row['active_status'] == 'delivered') {
-            $active_status = '<label class="label label-success">' . $row['active_status'] . '</label>';
-        }
-        if ($row['active_status'] == 'returned' || $row['active_status'] == 'cancelled') {
-            $active_status = '<label class="label label-danger">' . $row['active_status'] . '</label>';
-        }
-        $sql = "select name from delivery_boys where id=" . $row['delivery_boy_id'];
-        $db->sql($sql);
-        $res_dboy = $db->getResult();
-        $status = $temp;
-        $operate = "<a class='btn btn-sm btn-primary edit-fees' data-id='" . $row['id'] . "' data-toggle='modal' data-target='#editFeesModal'>Edit</a>";
+		$db->sql($sql);
+		$res[$i]['items'] = $db->getResult();
+	}
+	$bulkData = array();
+	$bulkData['total'] = $total;
+	$rows = array();
+	$tempRow = array();
+	foreach ($res as $row) {
+		$items = $row['items'];
+		$BranchID = $row['BranchID'];
+		
+		if($BranchID=="10000")
+		{
+			$branch_name="Main Branch";
+		}
+		else
+		{
+			$sqll = "select BranchName from Branch_Register where BranchID=".$BranchID;
+			$db->sql($sqll);
+			$res_branch_register = $db->getResult();
+			$branch_name=$res_branch_register[0]['BranchName'];
+		}
+		
+		$items1 = '';
+		$temp = '';
+		$total_amt = 0;
+		foreach ($items as $item) {
+			$temp .= "<b>Item ID :</b>" . $item['id'] . "<b> Product Variant Id :</b> " . $item['product_variant_id'] . "<b> Name : </b>" . $item['name'] . " <b>Unit : </b>" . $item['measurement'] . $item['mesurement_unit_name'] . " <b>Price : </b>" . $item['price'] . " <b>QTY : </b>" . $item['quantity'] . " <b>Subtotal : </b>" . $item['quantity'] * $item['price'] . "<br>------<br>";
+			$total_amt += $item['sub_total'];
+		}
+		$items1 = $temp;
+		$temp = '';
+		$status = json_decode($row['items'][0]['order_status']);
+		if (!empty($status)) {
+			foreach ($status as $st) {
+				$temp .= $st[0] . " : " . $st[1] . "<br>------<br>";
+			}
+		}
+		if ($row['active_status'] == 'received') {
+			$active_status = '<label class="label label-primary">' . $row['active_status'] . '</label>';
+		}
+		if ($row['active_status'] == 'awaiting_payment') {
+			$active_status = '<label class="label label-secondary">Awaiting Payment</label>';
+		}
+		if ($row['active_status'] == 'processed') {
+			$active_status = '<label class="label label-info">' . $row['active_status'] . '</label>';
+		}
+		if ($row['active_status'] == 'shipped') {
+			$active_status = '<label class="label label-warning">' . $row['active_status'] . '</label>';
+		}
+		if ($row['active_status'] == 'delivered') {
+			$active_status = '<label class="label label-success">' . $row['active_status'] . '</label>';
+		}
+		if ($row['active_status'] == 'returned' || $row['active_status'] == 'cancelled') {
+			$active_status = '<label class="label label-danger">' . $row['active_status'] . '</label>';
+		}
+		$sql = "select name from delivery_boys where id=".$row['delivery_boy_id'];
+		$db->sql($sql);
+		$res_dboy = $db->getResult();
+		$status = $temp;
+		$operate = "<a class='btn btn-sm btn-primary edit-fees' data-id='" . $row['id'] . "' data-toggle='modal' data-target='#editFeesModal'>Edit</a>";
 
-        $operate .= "<a onclick='return conf(\"delete\");' class='btn btn-sm btn-danger' href='../public/db_operations.php?id=" . $row['id'] . "&delete_order=1' target='_blank'>Delete</a>";
-        $discounted_amount = $row['total'] * $row['items'][0]['discount'] / 100; /*  */
-        $final_total = $row['total'] - $discounted_amount;
-        $discount_in_rupees = $row['total'] - $final_total;
-        $discount_in_rupees = floor($discount_in_rupees);
-        $tempRow['id'] = $row['id'];
-        $tempRow['user_id'] = $row['user_id'];
-        $tempRow['name'] = $row['items'][0]['uname'];
-        if (ALLOW_MODIFICATION == 0 && !defined(ALLOW_MODIFICATION)) {
-            $tempRow['mobile'] = str_repeat("*", strlen($row['mobile']) - 3) . substr($row['mobile'], -3);
-        } else {
-            $tempRow['mobile'] = $row['mobile'];
-        }
-        $tempRow['order_note'] = $row['order_note'];
-        $tempRow['delivery_charge'] = $row['delivery_charge'];
-        $tempRow['items'] = $items1;
-        $tempRow['total'] = $row['total'];
-        $tempRow['tax'] = $row['tax_amount'] . '(' . $row['tax_percentage'] . '%)';
-        $tempRow['promo_discount'] = $row['promo_discount'];
-        $tempRow['wallet_balance'] = $row['wallet_balance'];
-        $tempRow['discount'] = $discount_in_rupees . '(' . $row['items'][0]['discount'] . '%)';
-        $tempRow['qty'] = $row['items'][0]['quantity'];
-        $tempRow['final_total'] = $row['final_total'];
-        $tempRow['promo_code'] = $row['promo_code'];
-        $tempRow['deliver_by'] = !empty($res_dboy[0]['name']) ? $res_dboy[0]['name'] : 'Not Assigned';
-        $tempRow['payment_method'] = $row['payment_method'];
-        $tempRow['address'] = $row['address'];
-        $tempRow['delivery_time'] = $row['delivery_time'];
-        $tempRow['status'] = $status;
-        $tempRow['active_status'] = $active_status;
-        $tempRow['wallet_balance'] = $row['wallet_balance'];
-        $tempRow['date_added'] = date('d-m-Y', strtotime($row['date_added']));
-        $tempRow['operate'] = '<a href="order-detail.php?id=' . $row['id'] . '"><i class="fa fa-eye"></i> View</a>
+		$operate .= "<a onclick='return conf(\"delete\");' class='btn btn-sm btn-danger' href='../public/db_operations.php?id=" . $row['id'] . "&delete_order=1' target='_blank'>Delete</a>";
+		$discounted_amount = $row['total'] * $row['items'][0]['discount'] / 100; /*  */
+		$final_total = $row['total'] - $discounted_amount;
+		$discount_in_rupees = $row['total'] - $final_total;
+		$discount_in_rupees = floor($discount_in_rupees);
+		$tempRow['id'] = $row['id'];
+		$tempRow['type'] = $row['type'];
+	
+		$tempRow['user_id'] = $row['user_id'];
+		$tempRow['name'] = $row['items'][0]['uname'];
+		$tempRow['mobile'] = $row['mobile'];
+		$tempRow['delivery_charge'] = $row['delivery_charge'];
+		$tempRow['items'] = $items1;
+		$tempRow['total'] = $row['total'];
+		$tempRow['tax'] = $row['tax_amount'] . '(' . $row['tax_percentage'] . '%)';
+		$tempRow['promo_discount'] = $row['promo_discount'];
+		$tempRow['wallet_balance'] = $row['wallet_balance'];
+		$tempRow['discount'] = $discount_in_rupees . '(' . $row['items'][0]['discount'] . '%)';
+		$tempRow['qty'] = $row['items'][0]['quantity'];
+		$tempRow['final_total'] = $row['final_total'];
+		$tempRow['promo_code'] = $row['promo_code'];
+		$tempRow['deliver_by'] = !empty($res_dboy[0]['name'])?$res_dboy[0]['name']:'Not Assigned';
+		$tempRow['payment_method'] = $row['payment_method'];
+		$tempRow['branch_name'] = $branch_name;
+		$tempRow['address'] = $row['address'];
+		$tempRow['delivery_time'] = $row['delivery_time'];
+		$tempRow['status'] = $status;
+		$tempRow['active_status'] = $active_status;
+		$tempRow['wallet_balance'] = $row['wallet_balance'];
+		$tempRow['date_added'] = date('d-m-Y', strtotime($row['date_added']));
+		$tempRow['operate'] = '<a href="order-detail.php?id=' . $row['id'] . '"><i class="fa fa-eye"></i> View</a>
 				<br><a href="delete-order.php?id=' . $row['id'] . '"><i class="fa fa-trash"></i> Delete</a>';
-        $rows[] = $tempRow;
-    }
-    $bulkData['rows'] = $rows;
-    print_r(json_encode($bulkData));
+		$rows[] = $tempRow;
+	}
+	$bulkData['rows'] = $rows;
+	print_r(json_encode($bulkData));
+	
 }
 
 // data of 'CATEGORY' table goes here
@@ -317,7 +360,7 @@ if (isset($_GET['table']) && $_GET['table'] == 'branchmaster') {
 
     if (isset($_GET['search'])) {
         $search = $db->escapeString($fn->xss_clean($_GET['search']));
-        $where = " Where s.`id` like '%" . $search . "%' OR `name` like '%" . $search . "%' OR `subtitle` like '%" . $search . "%' OR `image` like '%" . $search . "%'";
+        $where = " WHERE BranchID LIKE '%" . $search . "%' OR  BranchName LIKE '%" . $search . "%' OR  Address LIKE '%" . $search . "%' OR City LIKE '%" . $search . "%' OR ContactPerson LIKE '%" . $search . "%'  OR ContactNumber LIKE '%" . $search . "%'  OR type LIKE '%" . $search . "%' ";
     }
 
 
@@ -326,7 +369,7 @@ if ($connect_db->connect_error) {
     die("Connection failed: ". $connect_db->connect_error);
     echo("DataBase Is Not Connected");
 }
-$get_product_user_group2 = mysqli_query($connect_db, "SELECT * FROM branch_register ");
+$get_product_user_group2 = mysqli_query($connect_db, "SELECT * FROM branch_register $where ");
 
     $bulkData = array();
     $bulkData['total'] = mysqli_num_rows($get_product_user_group2);
@@ -343,6 +386,14 @@ $get_product_user_group2 = mysqli_query($connect_db, "SELECT * FROM branch_regis
         $tempRow['City'] = $row['City'];
         $tempRow['ContactPerson'] = $row['ContactPerson'];
         $tempRow['ContactNumber'] =$row['ContactNumber'];
+		if($row['type']==="1")
+		{
+			$tempRow['Type'] ="POS";
+		}
+		if($row['type']==="0")
+		{
+			$tempRow['Type'] ="BRANCH";
+		}
         $tempRow['operate'] = $operate;
         $rows[] = $tempRow;
     }
@@ -1536,6 +1587,10 @@ if (isset($_GET['table']) && $_GET['table'] == 'system-users') {
         }
         if ($row['role'] == 'editor') {
             $role = '<span class="label label-warning">Editor</span>';
+        }
+        if ($row['role'] == 'POS') {
+            $role = '<span class="label label-info">POS</span>';
+			$row['email'] = "-";
         }
         $tempRow['id'] = $row['id'];
         $tempRow['username'] = $row['username'];

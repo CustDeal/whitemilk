@@ -1,16 +1,17 @@
 IN Admin(Core Php)
 
-1.Creation of POS User and Login.(in branch Creation Page)
+/******************Completed*******************************/
+1.1Creation of POS User and Login.(in branch Creation Page)
 	Add a dropdown  
 		1.Branch 
 		2.Pos 
 		if Pos we need to show Username and password 
-
+/******************Completed*******************************/
 		
-	After login as a POS user menu and dash board shoud change )
+1.2 After login as a POS user menu and dash board shoud change )
 2. All reports should show pos wise (Reports are already developed , we need to show only Pos wise and quality check )
 3.Stock Transfer Verification Page after receiving the goods from main Branch.
-4.Pos Sales Page by scanning barcode each product(need to add column 	Barcode).
+4.Pos Sales Page by scanning barcode each product(need to add column Barcode).
 5.Pos wise  customers  Subscribed /All.
 6.Need to check flow and rectify misllanious erros or additions.
 7.All Reports should be Exportable as excel/Pdf.

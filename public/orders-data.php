@@ -14,22 +14,18 @@ if (isset($_POST['update_order_status'])) {
 
     $process = $db->escapeString($function->xss_clean($_POST['status']));
 }
- $sql = "SELECT oi.*,oi.id as order_item_id,oi.tax_amount as tax_of_amount,oi.tax_percentage as percentage_of_tax,p.*,v.product_id, v.measurement,o.*,o.total as order_total,o.wallet_balance,oi.active_status as oi_active_status,u.email,u.name as uname,u.country_code,o.status as order_status,p.name as pname,(SELECT short_code FROM unit un where un.id=v.measurement_unit_id)as mesurement_unit_name 
+$sql = "SELECT oi.*,oi.id as order_item_id,p.*,v.product_id, v.measurement,o.*,o.total as order_total,o.wallet_balance,oi.active_status as oi_active_status,u.email,u.name as uname,u.country_code,o.status as order_status,p.name as pname,(SELECT short_code FROM unit un where un.id=v.measurement_unit_id)as mesurement_unit_name 
         FROM `order_items` oi
         JOIN users u ON u.id=oi.user_id
         JOIN product_variant v ON oi.product_variant_id=v.id
         JOIN products p ON p.id=v.product_id
-       RIGHT JOIN orders o ON o.id=oi.order_id
+        JOIN orders o ON o.id=oi.order_id
     WHERE o.id=" . $ID;
 $db->sql($sql);
 $res = $db->getResult();
-// echo "<pre>";
-// print_r($res);
-// echo "</pre>";
-
 $items = [];
 foreach ($res as $row) {
-    $data = array($row['product_id'], $row['product_variant_id'], $row['pname'], $row['measurement'], $row['mesurement_unit_name'], $row['quantity'], $row['discounted_price'], $row['price'], $row['oi_active_status'], $row['cancelable_status'], $row['order_item_id'], $row['sub_total'], $row['tax_of_amount'], $row['percentage_of_tax']);
+    $data = array($row['product_id'], $row['product_variant_id'], $row['pname'], $row['measurement'], $row['mesurement_unit_name'], $row['quantity'], $row['discounted_price'], $row['price'], $row['oi_active_status'], $row['cancelable_status'], $row['order_item_id'], $row['sub_total'], $row['tax_amount'], $row['tax_percentage']);
     array_push($items, $data);
 }
 ?>
@@ -39,6 +35,9 @@ foreach ($res as $row) {
     <ol class="breadcrumb">
         <li><a href="home.php"><i class="fa fa-home"></i> Home</a></li>
     </ol>
+		<div class="text-right" style="padding:10px;">
+		<a href="orders-add.php" class="btn btn-primary"><i class="fa fa-plus"></i> Add Order</a>
+		<div>
 </section>
 <section class="content">
     <div class="row">
@@ -55,7 +54,7 @@ foreach ($res as $row) {
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
-                        <table class="table table-bordered">
+                        <table class="table table-bordered someclass">
                             <tr>
                                 <input type="hidden" name="hidden" id="order_id" value="<?php echo $res[0]['id']; ?>">
                                 <th style="width: 10px">ID</th>
@@ -67,23 +66,11 @@ foreach ($res as $row) {
                             </tr>
                             <tr>
                                 <th style="width: 10px">Email</th>
-                                <?php if (ALLOW_MODIFICATION == 0 && !defined(ALLOW_MODIFICATION)) { ?>
-                                    <td> <?= str_repeat("*", strlen($res[0]['email']) - 13) . substr($res[0]['email'], -13); ?></td>
-                                <?php } else { ?>
-                                    <td> <?= $res[0]['email']; ?> </td>
-                                <?php } ?>
+                                <td><?php echo $res[0]['email']; ?></td>
                             </tr>
                             <tr>
                                 <th style="width: 10px">Contact</th>
-                                <?php if (ALLOW_MODIFICATION == 0 && !defined(ALLOW_MODIFICATION)) { ?>
-                                    <td> <?= str_repeat("*", strlen($res[0]['mobile']) - 3) . substr($res[0]['mobile'], -3); ?></td>
-                                <?php } else { ?>
-                                    <td> <?= $res[0]['mobile']; ?> </td>
-                                <?php } ?>
-                            </tr>
-                            <tr>
-                                <th style="width: 10px">Order Note</th>
-                                <td><?php echo $res[0]['order_note']; ?></td>
+                                <td><?php echo $res[0]['mobile']; ?></td>
                             </tr>
                             <tr>
                                 <th style="width: 10px">Items</th>
@@ -108,7 +95,6 @@ foreach ($res as $row) {
                                         if ($row['active_status'] == 'awaiting_payment') {
                                             $active_status = '<label class="label label-secondary">Awaiting Payment</label>';
                                         }
-                                        // print_r($item[12]);
                                         $total += $subtotal = ($item[6] != 0 && $item[6] < $item[7]) ? ($item[6] * $item[5]) : ($item[7] * $item[5]);
                                         echo "<b>Product Id : </b>" . $item[0];
                                         echo "<b> Product Variant Id : </b>" . $item[1];
@@ -123,7 +109,7 @@ foreach ($res as $row) {
                                         echo " <b>Active Status : </b>" . $active_status . "
                                         <a href='" . DOMAIN_URL . "/view-product-variants.php?id=" . $item[0] . "' class='btn btn-success btn-xs' title='View Product'><i class='fa fa-eye'></i> Product</a>
                                        <br> <br>";
-                                        if ($item[8] != 'returned' && $item[8] != 'cancelled') {
+                                        if ($item[9] == 1 && $item[8] != 'returned' && $item[8] != 'cancelled' && $item[8] != 'delivered') {
                                             echo "  <a href='#' class='btn btn-danger btn-xs update_order_item_status' data-value='" . $item[0] . "' data-value1='" . $item[10] . "' title='Cancel Product'><i class='fa fa-remove'></i> Cancel Product ? </a>
                                             <br>
                                             -----------------------------------<br>";
@@ -143,6 +129,11 @@ foreach ($res as $row) {
                                 <td><?php echo $res[0]['delivery_charge']; ?></td>
 
                             </tr>
+                            <tr>
+                                <th style="width: 10px">Tax <?= $settings['currency'] ?>(%)</th>
+                                <td><?php echo $res[0]['tax_amount'] . '(' . $res[0]['tax_percentage'] . '%)'; ?></td>
+                            </tr>
+
                             <?php if ($res[0]['discount'] > 0) {
                                 $discounted_amount = $res[0]['total'] * $res[0]['discount'] / 100; /*  */
                                 $final_total = $res[0]['total'] - $discounted_amount;
@@ -202,6 +193,7 @@ foreach ($res as $row) {
                                     $db->sql($sql);
                                     $result = $db->getResult();
                                     ?>
+
                                     <select id='deliver_by' name='deliver_by' class='form-control col-md-7 col-xs-12' required>
                                         <option value=''>Select Delivery Boy</option>
                                         <?php foreach ($result as $row1) {
@@ -209,6 +201,9 @@ foreach ($res as $row) {
                                                 <option value='<?= $row1['id'] ?>' selected><?= $row1['name'] ?></option>
                                             <?php } else { ?>
                                                 <option value='<?= $row1['id'] ?>'><?= $row1['name'] ?></option>
+
+
+
                                         <?php }
                                         } ?>
                                     </select>
@@ -242,9 +237,11 @@ foreach ($res as $row) {
                                     $i = count($status);
                                     $currentStatus = $status[$i - 1][0];
                                     ?>
-                                    <select name="status" id="status" class="form-control">
+
+                                    <select name="status" id="status" class="form-control status">
                                         <option value="awaiting_payment">Awaiting Payment</option>
                                         <option value="received">Received</option>
+                                        <option value="reschedule">Reschedule</option>
                                         <option value="processed">Processed</option>
                                         <option value="shipped">Shipped</option>
                                         <option value="delivered">Delivered</option>
@@ -253,7 +250,27 @@ foreach ($res as $row) {
                                     </select>
                                 </td>
                             </tr>
+                            
+                            <tr style="display:none;" class="ress">
+                                <th style="width: 10px">Reschedue Delivery Date/Time</th>
+                                <td><input class="form-control" id="rescheduledate" name="rescheduledate" type="date"></br>
+                                <select class="form-control" id="rescheduletime" name="rescheduletime"  >
+								<option value="">--Select Time Slots--</option>
+								<?php
+									$sql = "SELECT * FROM time_slots";
+    								$db->sql($sql);
+									$res = $db->getResult();
+									foreach ($res as $timeslot) {
+										echo "<option value='" . $timeslot['title'] . "'>" . $timeslot['title'] . "</option>";
+									}
+								?>
+								</td>
+							</select>
+                            </tr>
+
                         </table>
+
+
                         <!-- /.box-body -->
                         <div class="alert alert-danger" id="result_fail" style="display:none"></div>
                         <div class="alert alert-success" id="result_success" style="display:none"></div>
@@ -263,6 +280,7 @@ foreach ($res as $row) {
                             <a href="https://api.whatsapp.com/send?phone=<?= '+' . $res[0]['country_code'] . ' ' . $res[0]['mobile']; ?>&text=<?= $whatsapp_message; ?>" target='_blank' title="Send Whatsapp Notification" class="btn btn-success"><i class="fa fa-whatsapp"></i> Send Whatsapp Notification</a>
                         </div>
                     </div>
+
                     <?php
                     if ($currentStatus == "received") { ?>
                         <button class="btn btn-primary pull-right" onclick="myfunction()" style="margin-right: 5px; margin-top: -45px;"><i class="fa fa-download"></i>Generate Invoice</button>
@@ -305,7 +323,21 @@ foreach ($res as $row) {
         <?php } ?>
     </div>
 </section>
+
 <script>
+
+    $(document).on('change', '.status', function(e) {
+        var status = $('.status').find(":selected").text();
+        var rows = $('table.someclass tr');
+        var black = rows.filter('.ress');
+        
+        if(status == 'Reschedule'){
+            black.show();
+        }else{
+            black.hide();
+        }
+    });
+   
     var allowed = '<?= $allowed; ?>';
     $(document).on('click', '.update_order_status', function(e) {
         e.preventDefault();
@@ -321,30 +353,48 @@ foreach ($res as $row) {
             return false;
         }
         var status = $('#status').val();
-        var id = $('#order_id').val();
-        var deliver_by = $('#deliver_by').val();
-        var dataString = 'update_order_status=true&id=' + id + '&status=' + status + '&delivery_boy_id=' + deliver_by + '&ajaxCall=1';
-        $.ajax({
-            url: "api-firebase/order-process.php",
-            type: "POST",
-            data: dataString,
-            beforeSend: function() {
-                $('#submit_btn').html('Please wait..');
-                $('#submit_btn').attr('disabled', true);
-            },
-            dataType: "json",
-            success: function(data) {
-                if (data.error == true) {
-                    $('#result_fail').html(data.message);
-                    $('#result_fail').show().delay(6000).fadeOut();
-                } else {
-                    $('#result_success').html(data.message);
-                    $('#result_success').show().delay(6000).fadeOut();
+        console.log(status);
+        //if(status == 'reschedule'){
+            
+            
+        //}else{
+        
+            var monthNames = ["Jan", "Feb", "Mar", "Apr", "May","Jun","Jul", "Aug", "Sept", "Oct", "Nov","Dec"];
+
+            var id = $('#order_id').val();
+            var deliver_by = $('#deliver_by').val();
+            var rescheduledate = $('#rescheduledate').val();
+            var rescheduletime = $('#rescheduletime').val();
+           
+            var mydate = new Date(rescheduledate);
+            var year=mydate.getFullYear();
+            var month=mydate.getMonth() 
+            var day=mydate.getDate();
+            var formatted=day+"-"+monthNames[month]+"-"+year;
+            
+            var dataString = 'update_order_status=true&id=' + id + '&status=' + status + '&delivery_boy_id=' + deliver_by+ '&rescheduledate=' + formatted+ '&rescheduletime=' + rescheduletime + '&ajaxCall=1';
+            $.ajax({
+                url: "api-firebase/order-process.php",
+                type: "POST",
+                data: dataString,
+                beforeSend: function() {
+                    $('#submit_btn').html('Please wait..');
+                    $('#submit_btn').attr('disabled', true);
+                },
+                dataType: "json",
+                success: function(data) {
+                    if (data.error == true) {
+                        $('#result_fail').html(data.message);
+                        $('#result_fail').show().delay(6000).fadeOut();
+                    } else {
+                        $('#result_success').html(data.message);
+                        $('#result_success').show().delay(6000).fadeOut();
+                    }
+                    $('#submit_btn').attr('disabled', false);
+                    $('#submit_btn').html('Update');
                 }
-                $('#submit_btn').attr('disabled', false);
-                $('#submit_btn').html('Update');
-            }
-        });
+            });
+        //}
     });
     $(document).on('click', '.update_order_item_status', function(e) {
         e.preventDefault();

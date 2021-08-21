@@ -12,6 +12,18 @@ $sql_query = "SELECT *  FROM Branch_Register WHERE  BranchID=" . $ID;
 $db->sql($sql_query);
 $res = $db->getResult();
 
+if($res[0]['type']==="1")
+{
+	$sql_query = "SELECT *  FROM admin WHERE branch_id=" . $ID;
+	$db->sql($sql_query);
+	$res2 = $db->getResult();
+}
+else
+{
+	$res2[0]['username'] = "";
+}
+
+
 if (isset($_POST['btnEdit'])) {
     if (ALLOW_MODIFICATION == 0 && !defined(ALLOW_MODIFICATION)) {
         echo '<label class="alert alert-danger">This operation is not allowed in demo panel!.</label>';
@@ -22,6 +34,9 @@ if (isset($_POST['btnEdit'])) {
         $ContactPerson = $db->escapeString($fn->xss_clean($_POST['ContactPerson']));
         $Address = $db->escapeString($fn->xss_clean($_POST['Address']));
 		$ContactNumber = $db->escapeString($fn->xss_clean($_POST['ContactNumber']));
+		$txt_type = $db->escapeString($fn->xss_clean($_POST['txt_type']));
+		$txt_username = $db->escapeString($fn->xss_clean($_POST['txt_username']));
+		$txt_password = $db->escapeString($fn->xss_clean($_POST['txt_password']));
       
         // create array variable to handle error
         $error = array();
@@ -45,11 +60,34 @@ if (isset($_POST['btnEdit'])) {
 		if (empty($ContactNumber)) {
             $error['ContactNumber'] = " <span class='label label-danger'>Required!</span>";
         }
+		
+		if($txt_type==="1")
+		{
+			if (empty($txt_username)) {
+				$error['txt_username'] = " <span class='label label-danger'>Required!</span>";
+			}
+			
+			if (empty($txt_password)) {
+				$pass = "";
+			}
+			else
+			{
+				$d_password = md5($txt_password);
+				$pass = " , password = '".$d_password."'";
+			}
+		}
+		else
+		{
+			$txt_username=null;
+			$txt_password=null;
+			$pass = " , password = '".$txt_password."'";
+			
+		}
        
         if (!empty($BranchName) && !empty($City) && !empty($ContactPerson) && !empty($ContactNumber) && !empty($Address)) {
            
             // insert new data to product table
-            $sql = "UPDATE Branch_Register SET BranchName = '" . $BranchName . "', Address = '" . $Address . "', City = '" . $City . "', ContactPerson = '" .$ContactPerson."', ContactNumber = '" .$ContactNumber."'WHERE 	BranchID =" . $ID;
+            $sql = "UPDATE Branch_Register SET BranchName = '" . $BranchName . "', Address = '" . $Address . "', City = '" . $City . "', ContactPerson = '" .$ContactPerson."', ContactNumber = '" .$ContactNumber."', type = '" .$txt_type."' WHERE  BranchID =" . $ID;
 		
             // echo $sql;
             $db->sql($sql);
@@ -149,6 +187,33 @@ if (isset($_POST['btnCancel'])) { ?>
                                 <input type="text" class="form-control" name="ContactNumber" required value="<?php echo $res[0]['ContactNumber']; ?>">
                             </div>
                            
+                            </div>
+							
+						<div class="form-group">
+						<div class='col-md-4'>
+						<label for="txt_type">Select Type</label> <i class="text-danger asterik">*</i>
+						<select id="txt_type" name="txt_type" placeholder="Select Type" required class="form-control" onchange="hideShowDiv()">
+						<option value="0" <?php if($res[0]['type']==="0"){ echo " selected "; }?>>Branch</option>
+						<option value='1' <?php if($res[0]['type']==="1"){ echo " selected "; }?>>POS</option>
+						</select>
+
+						</div>
+						</div>
+						
+							<div class="form-group" id="usern"  <?php if($res[0]['type']==="1"){ echo ' style="display:block;"'; } else { echo ' style="display:none;"';}?>>
+                            <div class='col-md-4'>
+                                <label for="txt_username">UserName</label> <i class="text-danger asterik">*</i><?php echo isset($error['txt_username']) ? $error['txt_username'] : ''; ?>
+                                <input type="text" class="form-control" name="txt_username" id="txt_username" value="<?php echo $res2[0]['username']; ?>" >
+                            </div>
+                            </div>
+							
+							<div class="form-group" id="passw"  <?php if($res[0]['type']==="1"){ echo ' style="display:block;"'; } else { echo ' style="display:none;"';}?>>
+                            <div class='col-md-4'>
+                                <label for="txt_password">Password</label> <i class="text-danger asterik">*</i><?php echo isset($error['txt_password']) ? $error['txt_password'] : ''; ?>
+								<span class='label label-info'>Leave Blank If not want to change</span>
+                                <input type="text" class="form-control" name="txt_password" id="txt_password" >
+								
+                            </div>
                             </div>
                         </div>
                         <hr>
@@ -254,4 +319,20 @@ if (isset($_POST['btnCancel'])) { ?>
     //         alert('You Can not enter amount less than zero.');
     //     }
     // }
+</script>
+
+<script>
+function hideShowDiv() {
+  var x = document.getElementById("txt_type").value;
+  var y = document.getElementById("usern");
+  var z = document.getElementById("passw");
+
+  if (x === "1") {
+    y.style.display = "block";
+    z.style.display = "block";
+  } else {
+    y.style.display = "none";
+    z.style.display = "none";
+  }
+}
 </script>

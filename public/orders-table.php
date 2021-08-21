@@ -6,6 +6,9 @@ if ($permissions['orders']['read'] == 1) {
         <ol class="breadcrumb">
             <li><a href="home.php"><i class="fa fa-home"></i> Home</a></li>
         </ol>
+		<div class="text-right" style="padding:10px;">
+		<a href="orders-add.php" class="btn btn-primary"><i class="fa fa-plus"></i> Add Order</a>
+		<div>
         <hr />
     </section>
     <style>
@@ -34,15 +37,37 @@ if ($permissions['orders']['read'] == 1) {
                             <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
                         </div>
                         <form method="POST" id="filter_form" name="filter_form">
+							<div class="form-group">
+                                <div class="col-md-4">
+								 <label for="from"> Select Branch </label>
+                                 <?php 
+									$db->sql("SET NAMES 'utf8'");
+									$sql = "SELECT * FROM `Branch_Register` ORDER BY BranchID DESC";
+									$db->sql($sql);
+									$branches = $db->getResult();
+								 ?>
+									<select id='branch_id' name="branch_id" class='form-control' required>
+									<option value='All' style="display:none;" selected>Select Branch</option>
+									<?php foreach ($branches as $branch) { ?>
+										<option value='<?= $branch['BranchID'] ;?>'><?= $branch['BranchName'] . " - " . $branch['Address'] ?></option>
+									<?php } ?>
+									<option value='10000'>Main Branch</option>
+									<option value='All'>All Branch</option>
+									</select>
+									
+                                </div>
+                            </div>
+							
                             <div class="form-group">
-                                <label for="from" class="control-label col-md-1 col-sm-3 col-xs-12">From & To Date</label>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
+								 <label for="from">From & To Date</label>
                                     <input type="text" class="form-control" id="date" name="date" autocomplete="off" />
                                 </div>
                                 <input type="hidden" id="start_date" name="start_date">
                                 <input type="hidden" id="end_date" name="end_date">
                             </div>
                             <div class="form-group">
+								<label for="from">Order Type</label>
                                 <select id="filter_order" name="filter_order" placeholder="Select Status" required class="form-control" style="width: 300px;">
                                     <option value="">All Orders</option>
                                     <option value='awaiting_payment'>Awaiting Payment</option>
@@ -66,11 +91,11 @@ if ($permissions['orders']['read'] == 1) {
                                 <thead>
                                     <tr>
                                         <th data-field="id" data-sortable='true'>O.ID</th>
+                                        <th data-field="type" data-sortable='true' data-visible="true">Type</th>
                                         <th data-field="user_id" data-sortable='true' data-visible="false">User ID</th>
                                         <th data-field="qty" data-sortable='true' data-visible="false">Qty</th>
                                         <th data-field="name" data-sortable='true'>U.Name</th>
                                         <th data-field="mobile" data-sortable='true' data-visible="true" data-footer-formatter="totalFormatter">Mob.</th>
-                                        <th data-field="order_note" data-sortable='false' data-visible="false">Order Note</th>
                                         <th data-field="items" data-sortable='true' data-visible="false">Items</th>
                                         <th data-field="total" data-sortable='true' data-visible="true" data-footer-formatter="priceFormatter">Total(<?= $settings['currency'] ?>)</th>
                                         <th data-field="delivery_charge" data-sortable='true' data-footer-formatter="delivery_chargeFormatter">D.Chrg</th>
@@ -82,11 +107,13 @@ if ($permissions['orders']['read'] == 1) {
                                         <th data-field="final_total" data-sortable='true' data-footer-formatter="final_totalFormatter">F.Total(<?= $settings['currency'] ?>)</th>
                                         <th data-field="deliver_by" data-sortable='true' data-visible='false'>Deliver By</th>
                                         <th data-field="payment_method" data-sortable='true' data-visible="true">P.Method</th>
+										<th data-field="branch_name" data-sortable='true' data-visible="true">Branch Name</th>
                                         <th data-field="address" data-sortable='true' data-visible="false">Address</th>
                                         <th data-field="delivery_time" data-sortable='true' data-visible='true'>D.Time</th>
                                         <th data-field="status" data-sortable='true' data-visible='false'>Status</th>
                                         <th data-field="active_status" data-sortable='true' data-visible='true'>A.Status</th>
                                         <th data-field="date_added" data-sortable='true' data-visible="false">O.Date</th>
+                                        
                                         <th data-field="operate">Action</th>
                                     </tr>
                                 </thead>
@@ -135,6 +162,10 @@ if ($permissions['orders']['read'] == 1) {
         $('#filter_order').on('change', function() {
             $('#order_list').bootstrapTable('refresh');
         });
+		
+		$('#branch_id').on('change', function() {
+            $('#order_list').bootstrapTable('refresh');
+        });
     });
 
     function queryParams_1(p) {
@@ -142,6 +173,7 @@ if ($permissions['orders']['read'] == 1) {
             "start_date": $('#start_date').val(),
             "end_date": $('#end_date').val(),
             "filter_order": $('#filter_order_status').val(),
+			"branch_id": $('#branch_id').val(),
             limit: p.limit,
             sort: p.sort,
             order: p.order,
