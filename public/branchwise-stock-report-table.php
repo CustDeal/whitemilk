@@ -39,13 +39,13 @@ $fn = new custom_functions;
 									$db->sql($sql);
 									$branches = $db->getResult();
 								 ?>
-									<select id='branch_id' name="branch_id" class='form-control' required >
-									<option value='' style="display:none;" selected>Select Branch</option>
+									<select id='branch_id' name="branch_id" class='form-control' required <?php if($role==="POS"){  echo " readonly  ";} ?> >
+									<option value='All' style="display:none;" selected>Select Branch</option>
 									<?php foreach ($branches as $branch) { ?>
-										<option value='<?= $branch['BranchID']; ?>'><?= $branch['BranchName'] . " - " . $branch['Address'] ?></option>
+										<option value='<?= $branch['BranchID'] ;?>' <?php if($role==="POS"){ if($branch['BranchID']===$_SESSION['BranchIDLog']){ echo " selected  ";}else { echo 'style="display:none;"';}} ?>><?= $branch['BranchName'] . " - " . $branch['Address'] ?></option>
 									<?php } ?>
-									<option value='10000'>Main Branch</option>
-									
+									<option value='10000' <?php if($role==="POS"){ if($branch['BranchID']===$_SESSION['BranchIDLog']){ echo " selected  ";}else { echo 'style="display:none;"';}} ?>>Main Branch</option>
+									<option value='All' <?php if($role==="POS"){ if($branch['BranchID']===$_SESSION['BranchIDLog']){ echo " selected  ";}else { echo 'style="display:none;"';}} ?>>All Branch</option>
 									</select>
 									
                                 </div>
@@ -73,9 +73,6 @@ $fn = new custom_functions;
                                         <th data-field="branch_id" data-sortable='true' data-visible="true">Branch ID</th>
 										<th data-field="branch_name" data-sortable='true' data-visible="true">Branch Name</th>
                                         <th data-field="from_source" data-sortable='true' >From Source</th>
-                                        <th data-field="outside_branch_name" data-sortable='true' data-visible='false'>Outside Branch Name</th>
-                                        <th data-field="added_on" data-sortable='true' data-visible="false" >Added On</th>
-										<th data-field="updated_on" data-sortable='true' data-visible="false" >Updated On</th>
                                     </tr>
                                 </thead>
                             </table>

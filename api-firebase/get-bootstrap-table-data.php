@@ -2632,7 +2632,7 @@ if (isset($_GET['table']) && $_GET['table'] == 'branchwise_stock_report')
 		$branch_id = $db->escapeString($fn->xss_clean($_GET['branch_id']));
 		if($branch_id!="All" || $branch_id!="")
 		{
-			$where .= " where BranchID='".$branch_id."' ";
+			$where .= " where v.BranchID='".$branch_id."' ";
 		}
 	}
 	
@@ -2647,7 +2647,7 @@ if (isset($_GET['table']) && $_GET['table'] == 'branchwise_stock_report')
 	if (isset($_GET['search']) && !empty($_GET['search'])) 
 	{
 		$search = $db->escapeString($fn->xss_clean($_GET['search']));
-		$where .= " where (v.id like '%" . $search . "%' OR v.product_id like '%" . $search . "%' OR v.type like '%" . $search . "%' OR v.measurement like '%" . $search . "%' OR v.measurement_unit_id like '%" . $search . "%' OR v.price like '%" . $search . "%' OR v.discounted_price like '%" . $search . "%' OR v.serve_for like '%" . $search . "%' OR v.stock like '%" . $search . "%' OR v.stock like '%" . $search . "%' OR v.stock_unit_id like '%" . $search . "%' OR v.BranchID like '%" . $search . "%'  OR v.FromSource like '%" . $search . "%'  OR v.outside_branch_name like '%" . $search . "%'  OR v.added_on like '%" . $search . "%'  OR v.updated_on  like '%" . $search . "%' OR p.name like '%" . $search . "%' ) ";
+		$where .= " where (v.id like '%" . $search . "%' OR v.product_id like '%" . $search . "%' OR v.type like '%" . $search . "%' OR v.measurement like '%" . $search . "%' OR v.measurement_unit_id like '%" . $search . "%' OR v.price like '%" . $search . "%' OR v.discounted_price like '%" . $search . "%' OR v.serve_for like '%" . $search . "%' OR v.stock like '%" . $search . "%' OR v.stock like '%" . $search . "%' OR v.stock_unit_id like '%" . $search . "%' OR v.BranchID like '%" . $search . "%'  OR v.from_branch like '%" . $search . "%' OR p.name like '%" . $search . "%' ) ";
 	}
 	
 	$sql = "SELECT COUNT(id) as total FROM product_variant ";
@@ -2678,10 +2678,24 @@ if (isset($_GET['table']) && $_GET['table'] == 'branchwise_stock_report')
 		}
 		else
 		{
-			$sqll = "select `BranchName` from `Branch_Register` where BranchID=".$BranchID;
-			$db->sql($sqll);
-			$res_branch_register = $db->getResult();
-			$branch_name=$res_branch_register[0]['BranchName'];
+$connect_db = mysqli_connect(DB_SERVER,DB_USERNAME,DB_PASSWORD,DB_DATABASE);
+if ($connect_db->connect_error) {
+    die("Connection failed: ". $connect_db->connect_error);
+    echo("DataBase Is Not Connected");
+}
+
+$get_branchpos_group = mysqli_query($connect_db, "SELECT * FROM branch_register where BranchID='".$BranchID."'");
+if(mysqli_num_rows($get_branchpos_group) > 0)
+{
+$branchpos_group = mysqli_fetch_array($get_branchpos_group);
+$branch_name=$branchpos_group['BranchName'];
+}
+else
+{
+	$branch_name="";
+}
+
+
 		}
 		
 		
@@ -2698,10 +2712,7 @@ if (isset($_GET['table']) && $_GET['table'] == 'branchwise_stock_report')
 		$tempRow['stock_unit_id'] = $row['stock_unit_id'];
 		$tempRow['branch_id'] = $row['BranchID'];
 		$tempRow['branch_name'] = $branch_name;
-		$tempRow['from_source'] = $row['FromSource'];
-		$tempRow['outside_branch_name'] = $row['outside_branch_name'];
-		$tempRow['added_on'] = $row['added_on'];
-		$tempRow['updated_on'] = $row['updated_on'];
+		$tempRow['from_source'] = $row['from_branch'];
 		
 		$rows[] = $tempRow;
 	}
@@ -2709,5 +2720,6 @@ if (isset($_GET['table']) && $_GET['table'] == 'branchwise_stock_report')
 	print_r(json_encode($bulkData));
 	
 }
+
 
 $db->disconnect();

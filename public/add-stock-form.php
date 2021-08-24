@@ -302,7 +302,7 @@ function fetch_select4(avarient)
  success: function (response) {
 	 
 const obj = JSON.parse(response);
-document.getElementById("txt_qty").value=obj.stock; 
+	//document.getElementById("txt_qty").value=obj.stock; 
      document.getElementById("txt_discount").value=obj.discounted_price; 
 
 
@@ -331,8 +331,8 @@ function fetch_select5(avarient2,id)
  success: function (response) {
   
 const obj2 = JSON.parse(response);
-document.getElementById("txt_qty"+id+"").value=obj2.stock; 
-     document.getElementById("txt_discount"+id+"").value=obj2.discounted_price; 
+//document.getElementById("txt_qty"+id+"").value=obj2.stock; 
+    document.getElementById("txt_discount"+id+"").value=obj2.discounted_price; 
    
  }
  });

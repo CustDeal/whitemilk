@@ -46,13 +46,13 @@ if ($permissions['orders']['read'] == 1) {
 									$db->sql($sql);
 									$branches = $db->getResult();
 								 ?>
-									<select id='branch_id' name="branch_id" class='form-control' required>
+									<select id='branch_id' name="branch_id" class='form-control' required <?php if($role==="POS"){  echo " readonly  ";} ?> >
 									<option value='All' style="display:none;" selected>Select Branch</option>
 									<?php foreach ($branches as $branch) { ?>
-										<option value='<?= $branch['BranchID'] ;?>'><?= $branch['BranchName'] . " - " . $branch['Address'] ?></option>
+										<option value='<?= $branch['BranchID'] ;?>' <?php if($role==="POS"){ if($branch['BranchID']===$_SESSION['BranchIDLog']){ echo " selected  ";}else { echo 'style="display:none;"';}} ?>><?= $branch['BranchName'] . " - " . $branch['Address'] ?></option>
 									<?php } ?>
-									<option value='10000'>Main Branch</option>
-									<option value='All'>All Branch</option>
+									<option value='10000' <?php if($role==="POS"){ if($branch['BranchID']===$_SESSION['BranchIDLog']){ echo " selected  ";}else { echo 'style="display:none;"';}} ?>>Main Branch</option>
+									<option value='All' <?php if($role==="POS"){ if($branch['BranchID']===$_SESSION['BranchIDLog']){ echo " selected  ";}else { echo 'style="display:none;"';}} ?>>All Branch</option>
 									</select>
 									
                                 </div>

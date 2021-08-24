@@ -1,4 +1,6 @@
-<?php include_once('includes/crud.php');
+<?php 
+include_once('includes/crud.php');
+include_once('barcode.php');
 $db = new Database();
 $db->connect();
 $db->sql("SET NAMES 'utf8'");
@@ -172,6 +174,7 @@ $res_logo = $db->getResult();
                         $result = $db->getResult();
                         foreach ($result as $row) {
                             $user = $row['username'];
+
                             $email = $row['email'];
                         ?>
                             <li class="dropdown user user-menu">
@@ -186,6 +189,11 @@ $res_logo = $db->getResult();
                                         <p>
                                             <?= $user; ?>
                                             <small><?= $email; ?></small>
+                                            <small><?php 							if($role==="POS")
+							{
+								echo "POS ID: ". $_SESSION['BranchIDLog'];
+							}
+							?></small>
                                         </p>
                                     </li>
                                     <li class="user-footer">
@@ -228,8 +236,7 @@ $res_logo = $db->getResult();
                             <i class="fa fa-angle-right pull-right"></i>
                         </a>
                         <ul class="treeview-menu">
-                            <li><a href="add-stock-transfer.php"><i class="fa fa-plus"></i> Add StockTransfer</a></li>
-                            <li><a href="stocktransfer.php"><i class="fa fa-sliders"></i> Manage StockTransfer</a></li>
+                            <li><a href="stocktransfer.php"><i class="fa fa-sliders"></i> Verify Stock</a></li>
                            
                         </ul>
                     </li>
