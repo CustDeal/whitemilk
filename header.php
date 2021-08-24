@@ -220,6 +220,32 @@ $res_logo = $db->getResult();
                         <span>Orders</span>
                     </a>
                 </li>
+				
+                    <li class="treeview">
+                        <a href="#">
+                            <i class="fa fa-bullseye"></i>
+                            <span>Stock Transfer</span>
+                            <i class="fa fa-angle-right pull-right"></i>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="add-stock-transfer.php"><i class="fa fa-plus"></i> Add StockTransfer</a></li>
+                            <li><a href="stocktransfer.php"><i class="fa fa-sliders"></i> Manage StockTransfer</a></li>
+                           
+                        </ul>
+                    </li>
+				
+                    <li class="treeview">
+                        <a href="#">
+                            <i class="fa fa-folder-open"></i>
+                            <span>Reports</span>
+                            <i class="fa fa-angle-right pull-right"></i>
+                        </a>
+                        <ul class="treeview-menu">
+							<li><a href="branchwise-sales-report.php"><i class="fa fa-money"></i>Branchwise Sales Report</a></li>
+							<li><a href="branchwise-stock-report.php"><i class="fa fa-money"></i>Branchwise Stock Report</a></li>
+
+                        </ul>
+                    </li>
 			
 			<?PHP }?>			
 			<?php if($role == 'admin' || $role == 'super admin'){?>
@@ -278,7 +304,6 @@ $res_logo = $db->getResult();
                         </a>
                         <ul class="treeview-menu">
                             <li><a href="add-stock-transfer.php"><i class="fa fa-plus"></i> Add StockTransfer</a></li>
-							 <li><a href="branchwise-stock-updation.php"><i class="fa fa-plus"></i> Update Branchwise Stock</a></li>
                             <li><a href="stocktransfer.php"><i class="fa fa-sliders"></i> Manage StockTransfer</a></li>
                            
                         </ul>

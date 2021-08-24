@@ -7,6 +7,8 @@ if ($connect_db->connect_error) {
     echo("DataBase Is Not Connected");
 }
 
+$return_arr = array();
+
 if(isset($_POST['get_option']))
 {
  $txt_user = $_POST['get_option'];
@@ -22,12 +24,27 @@ if($find === FALSE) {
 
 if(!empty($row['discounted_price']) && $row['discounted_price']!=null)
 {
- echo $row['discounted_price'];
+ $dis_p =  $row['discounted_price'];
 }
 else
 {
-	echo 0;
+	$dis_p = 0;
 }
+
+if(!empty($row['stock']) && $row['stock']!=null)
+{
+ $show_s =  $row['stock'];
+}
+else
+{
+	$show_s = 0;
+}
+
+$return_arr = array('discounted_price'=>$dis_p,'stock'=>$show_s);
+
+echo json_encode($return_arr);
+
+
  exit;
 }
 }

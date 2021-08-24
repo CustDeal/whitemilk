@@ -275,9 +275,9 @@ foreach ($res as $row) {
                         <div class="alert alert-danger" id="result_fail" style="display:none"></div>
                         <div class="alert alert-success" id="result_success" style="display:none"></div>
                         <div class="box-footer clearfix">
-                            <?php $whatsapp_message = "Hello " . ucwords($res[0]['uname']) . ", Your order with ID : " . $res[0]['id'] . " is " . ucwords($currentStatus) . ". Please take a note of it. If you have further queries feel free to contact us. Thank you."; ?>
+                            <?php $whatsapp_message = "Hello " . ucwords($row['uname']) . ", Your order with ID : " . $res[0]['id'] . " is " . ucwords($currentStatus) . ". Please take a note of it. If you have further queries feel free to contact us. Thank you."; ?>
                             <a href="#" title='update' id="submit_btn" class="btn btn-primary update_order_status" data-id='<?= $res[0]['id']; ?>'>Update</a>
-                            <a href="https://api.whatsapp.com/send?phone=<?= '+' . $res[0]['country_code'] . ' ' . $res[0]['mobile']; ?>&text=<?= $whatsapp_message; ?>" target='_blank' title="Send Whatsapp Notification" class="btn btn-success"><i class="fa fa-whatsapp"></i> Send Whatsapp Notification</a>
+                            <a href="https://api.whatsapp.com/send?phone=<?= '+' . $row['country_code'] . ' ' . $row['mobile']; ?>&text=<?= $whatsapp_message; ?>" target='_blank' title="Send Whatsapp Notification" class="btn btn-success"><i class="fa fa-whatsapp"></i> Send Whatsapp Notification</a>
                         </div>
                     </div>
 

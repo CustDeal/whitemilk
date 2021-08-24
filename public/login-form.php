@@ -50,6 +50,7 @@ if (isset($_POST['btnLogin'])) {
             $_SESSION['user'] = $username;
             $_SESSION['email'] = $res[0]['email'];
             $_SESSION['timeout'] = $currentTime + $expired;
+            $_SESSION['BranchIDLog'] = $res[0]['branch_id'];
 
             header("location: home.php");
         }
@@ -64,7 +65,7 @@ if (isset($_POST['btnLogin'])) {
         // Close statement object
         if ($num == 1) {
             $_SESSION['id'] = $res[0]['BranchID'];
-            $_SESSION['role'] = "super admin";
+            $_SESSION['role'] = "POS";
             $_SESSION['user'] = $username;
             $_SESSION['email'] = "pos@pos.com";
             $_SESSION['timeout'] = $currentTime + $expired;

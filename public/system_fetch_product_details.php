@@ -16,7 +16,10 @@ if(isset($_POST['get_option']))
  echo '<option value="" style="display:none;" selected>--  Select Varient Name --</option>';
  while($row=mysqli_fetch_array($find))
  {
-  echo '<option value="'.$row['id'].'">'.$row['measurement'].'</option>';
+ $unit=mysqli_query($connect_db,"SELECT name FROM unit where id='".$row['measurement_unit_id']."'");
+ $unit_name=mysqli_fetch_array($unit);
+
+  echo '<option value="'.$row['id'].'">'.$row['measurement'].' '.$unit_name['name'].'</option>';
  }
  }
  exit;
