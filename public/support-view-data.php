@@ -347,3 +347,5 @@ $messages = $db->getResult();
 </body>
 
 </html>
+
+<?php unset($_SESSION['date_name']); ?>

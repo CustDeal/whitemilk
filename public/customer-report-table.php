@@ -420,3 +420,5 @@ if (isset($_POST) && isset($_POST['start_date']) && isset($_POST['end_date'])) {
     $db->disconnect();
 
 ?>
+
+<?php unset($_SESSION['date_name']); ?>

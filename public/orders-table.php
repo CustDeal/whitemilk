@@ -224,3 +224,4 @@ if ($permissions['orders']['read'] == 1) {
 <?php
 $db->disconnect();
 ?>
+<?php unset($_SESSION['date_name']); ?>

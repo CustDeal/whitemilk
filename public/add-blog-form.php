@@ -145,3 +145,5 @@ if (isset($_POST['btnAdd'])) {
 </script>
 
 <?php $db->disconnect(); ?>
+
+<?php unset($_SESSION['date_name']); ?>

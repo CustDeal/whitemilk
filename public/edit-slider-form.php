@@ -259,3 +259,5 @@ if (isset($_POST['btnCancel'])) { ?>
         $("#products").show();
     }
 </script>
+
+<?php unset($_SESSION['date_name']); ?>

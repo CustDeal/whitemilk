@@ -175,3 +175,5 @@ if ($permissions['locations']['read'] == 1) {
 				</div><!-- /.row (main row) -->
 
 			</section><!-- /.content -->
+
+<?php unset($_SESSION['date_name']); ?>

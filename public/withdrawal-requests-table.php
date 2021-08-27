@@ -189,3 +189,5 @@ include_once('includes/functions.php');
         $('#withdrawal-requests').bootstrapTable('refresh');
     });
 </script>
+
+<?php unset($_SESSION['date_name']); ?>

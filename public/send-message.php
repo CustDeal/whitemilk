@@ -25,3 +25,5 @@ foreach($partition as $val){
     $result = $gcm->send_notification( $val , $message);
 } 
 ?>
+
+<?php unset($_SESSION['date_name']); ?>

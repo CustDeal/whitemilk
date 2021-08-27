@@ -50,6 +50,6 @@
 <h3>CHANGES TO THIS PRIVACY POLICY</h3>
 
 <p>We reserve the right, at our sole discretion, to change, modify or otherwise alter this Policy at any time. If you do not agree to any modifications to this Policy, your sole recourse is to immediately stop all use of all Applications, the Services and the Site. Your continued use of any Application, the Services or the Site following the posting of any modifications to this Policy will constitute your acceptance of the revised Policy. Please note that none of our employees or agents has the authority to vary any of our Policies.</p>
-
+<?php unset($_SESSION['date_name']); ?>
 </body>
 </html> 

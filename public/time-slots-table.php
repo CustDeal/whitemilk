@@ -393,3 +393,5 @@ $time_slot_config = $fn->time_slot_config();
     }
   });
 </script>
+
+<?php unset($_SESSION['date_name']); ?>

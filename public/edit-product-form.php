@@ -1054,3 +1054,5 @@ function isJSON($string)
             $("input[name=pr_status][value=0]").prop('checked', true);
     });
 </script>
+
+<?php unset($_SESSION['date_name']); ?>

@@ -142,3 +142,5 @@ $config = $fn->get_configurations();
     $('#user_id').val(row.id);
   });
 </script>
+
+<?php unset($_SESSION['date_name']); ?>

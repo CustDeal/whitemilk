@@ -49,3 +49,5 @@ echo json_encode($return_arr);
 }
 }
 ?>
+
+<?php unset($_SESSION['date_name']); ?>

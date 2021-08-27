@@ -229,6 +229,13 @@ $res_logo = $db->getResult();
                     </a>
                 </li>
 				
+                <li class="treeview">
+                    <a href="barcode-add.php">
+                        <i class="fa fa-shopping-cart"></i>
+                        <span>Add Barcode Orders</span>
+                    </a>
+                </li>
+				
                     <li class="treeview">
                         <a href="#">
                             <i class="fa fa-bullseye"></i>

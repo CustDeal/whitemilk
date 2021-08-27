@@ -138,3 +138,5 @@ $db->disconnect(); ?>
 		}
 	});
 </script>
+
+<?php unset($_SESSION['date_name']); ?>

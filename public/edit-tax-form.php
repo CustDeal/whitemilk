@@ -144,3 +144,5 @@ if (isset($_POST['btnCancel'])) { ?>
     });
 </script>
 <?php $db->disconnect(); ?>
+
+<?php unset($_SESSION['date_name']); ?>

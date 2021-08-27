@@ -187,3 +187,5 @@ if (isset($_POST['btnCancel'])) { ?>
 
 <div class="separator"> </div>
 <?php $db->disconnect(); ?>
+
+<?php unset($_SESSION['date_name']); ?>

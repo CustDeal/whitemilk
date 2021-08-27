@@ -36,3 +36,6 @@
   </body>
 </html>
 <?php include"footer.php";?>
+
+
+<?php unset($_SESSION['date_name']); ?>

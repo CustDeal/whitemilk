@@ -2206,3 +2206,6 @@ if (isset($_POST['bulk_uploads']) && $_POST['bulk_uploads'] == 1 && (isset($_POS
         echo "<p class='alert alert-danger'>Invalid file format! Please upload data in CSV file!</p><br>";
     }
 }
+
+
+<?php unset($_SESSION['date_name']); ?>

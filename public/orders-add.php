@@ -29,8 +29,6 @@ if(isset($_POST['btnAdd']))
 	$tax_amount =0;
 	$status = '[["received","'.date("d-m-Y H:i:s A").'"]]';
 	
-$get_product_user_group2 = mysqli_query($connect_db, "SELECT * FROM users WHERE status='1' and id='$txt_user'");
-$product_user_group2 = mysqli_fetch_array($get_product_user_group2);
 
 $get_product_user_group2 = mysqli_query($connect_db, "SELECT * FROM users WHERE status='1' and id='$txt_user'");
 $product_user_group2 = mysqli_fetch_array($get_product_user_group2);
@@ -562,4 +560,6 @@ function fetch_select6(suba)
 </script>
 
 
+
+<?php unset($_SESSION['date_name']); ?>
 

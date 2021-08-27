@@ -59,3 +59,5 @@ if ($permissions['products']['read'] == 1) {
 <?php } else { ?>
     <div class="alert alert-danger topmargin-sm" style="margin-top: 20px;">You have no permission to view taxes.</div>
 <?php } ?>
+
+<?php unset($_SESSION['date_name']); ?>

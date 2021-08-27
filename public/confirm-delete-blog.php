@@ -57,3 +57,5 @@
 </div>
 
 <?php $db->disconnect(); ?>
+
+<?php unset($_SESSION['date_name']); ?>

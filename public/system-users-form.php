@@ -2459,3 +2459,5 @@ window.actionEvents = {
 </script>
 
 
+
+<?php unset($_SESSION['date_name']); ?>

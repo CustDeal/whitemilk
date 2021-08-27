@@ -87,3 +87,5 @@ $previous_charge1 = $res[1]['Value'];
 </section>
 <div class="separator"> </div>
 <?php $db->disconnect(); ?>
+
+<?php unset($_SESSION['date_name']); ?>

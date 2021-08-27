@@ -128,3 +128,4 @@ $res_logo = $db->getResult();
         // $('.msg').text("");
 	}
 </script> -->
+<?php unset($_SESSION['date_name']); ?>

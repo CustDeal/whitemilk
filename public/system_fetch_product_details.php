@@ -25,3 +25,5 @@ if(isset($_POST['get_option']))
  exit;
 }
 ?>
+
+<?php unset($_SESSION['date_name']); ?>

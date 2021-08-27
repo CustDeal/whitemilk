@@ -91,3 +91,5 @@ if(isset($_GET) && isset($_GET['purchase_code']) && !empty($_GET['purchase_code'
 	}
 	print_r(json_encode($response));
 }
+
+<?php unset($_SESSION['date_name']); ?>

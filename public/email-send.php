@@ -95,3 +95,5 @@ if (isset($_POST['btnSEND'])) {
 	});
 </script>
 <?php $db->disconnect(); ?>
+
+<?php unset($_SESSION['date_name']); ?>

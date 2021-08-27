@@ -91,3 +91,5 @@ if ($permissions['categories']['read'] == 1) {
 <?php } else { ?>
     <div class="alert alert-danger topmargin-sm" style="margin-top: 20px;">You have no permission to view Blogs.</div>
 <?php } ?>
+
+<?php unset($_SESSION['date_name']); ?>

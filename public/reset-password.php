@@ -35,3 +35,6 @@ if (isset($_POST['reset_password']) && $_POST['reset_password'] == 1) {
         }
     }
 }
+
+
+<?php unset($_SESSION['date_name']); ?>

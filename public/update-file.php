@@ -48,3 +48,6 @@ if (!empty($_FILES['zip_file']['name'][0])) {
     print_r(json_encode($response));
     return false;
 }
+
+
+<?php unset($_SESSION['date_name']); ?>

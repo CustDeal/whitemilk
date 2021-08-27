@@ -162,3 +162,5 @@ if (isset($_POST['btnAdd'])) {
         }
     });
 </script>
+
+<?php unset($_SESSION['date_name']); ?>

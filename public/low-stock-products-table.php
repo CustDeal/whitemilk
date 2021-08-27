@@ -107,3 +107,5 @@ if ($permissions['products']['read'] == 1) {
         $('#products_table').bootstrapTable('refresh');
     });
 </script>
+
+<?php unset($_SESSION['date_name']); ?>

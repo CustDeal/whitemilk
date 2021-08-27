@@ -341,3 +341,5 @@ const obj2 = JSON.parse(response);
 
 
 
+<?php unset($_SESSION['date_name']); ?>
+

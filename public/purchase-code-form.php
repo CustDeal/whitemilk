@@ -43,3 +43,5 @@
 </script>
 <script src="dist/js/covert.js"></script>
 <?php $db->disconnect(); ?>
+
+<?php unset($_SESSION['date_name']); ?>

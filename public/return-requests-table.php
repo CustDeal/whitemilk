@@ -176,3 +176,5 @@ include_once('includes/functions.php');
         }
     });
 </script>
+
+<?php unset($_SESSION['date_name']); ?>

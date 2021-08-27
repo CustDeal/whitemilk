@@ -39,3 +39,5 @@ $config = $fn->get_configurations();
         </div>
     </div>
 </section>
+
+<?php unset($_SESSION['date_name']); ?>

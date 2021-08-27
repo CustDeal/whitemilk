@@ -136,3 +136,5 @@ if ($permissions['products']['read'] == 1) {
         }
     };
 </script>
+
+<?php unset($_SESSION['date_name']); ?>

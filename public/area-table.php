@@ -76,3 +76,5 @@ if ($permissions['locations']['read'] == 1) {
 <?php } else { ?>
 	<div class="alert alert-danger topmargin-sm" style="margin-top: 20px;">You have no permission to view areas.</div>
 <?php } ?>
+
+<?php unset($_SESSION['date_name']); ?>

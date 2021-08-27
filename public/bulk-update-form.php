@@ -148,3 +148,5 @@ $config = $fn->get_configurations();
     }
   });
 </script>
+
+<?php unset($_SESSION['date_name']); ?>

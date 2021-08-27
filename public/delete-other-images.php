@@ -30,3 +30,5 @@ if(isset($_POST['i']) && isset($_POST['pid'])){
 		echo 0;
 }
 ?>
+
+<?php unset($_SESSION['date_name']); ?>

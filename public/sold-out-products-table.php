@@ -113,3 +113,5 @@ $('#category_id').on('change',function(){
     $('#products_table').bootstrapTable('refresh');
 });
 </script>
+
+<?php unset($_SESSION['date_name']); ?>

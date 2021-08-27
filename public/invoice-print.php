@@ -347,3 +347,5 @@ $order_list = $encoded_items;
 <script>
  $("br").remove();
 </script>
+
+<?php unset($_SESSION['date_name']); ?>

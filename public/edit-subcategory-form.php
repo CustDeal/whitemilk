@@ -215,3 +215,5 @@ if (isset($_POST['btnCancel'])) { ?>
 	}
 
 </script>
+
+<?php unset($_SESSION['date_name']); ?>
