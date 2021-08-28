@@ -54,6 +54,13 @@ if (isset($_GET['table']) && $_GET['table'] == 'orders') {
 	$sort = 'o.id';
 	$order = 'DESC';
 	$where = ' ';
+
+if(isset($_SESSION['BranchIDLog']) && !empty($_SESSION['BranchIDLog']) && $_SESSION['BranchIDLog']!=null)
+{
+	$_GET['branch_id'] = $_SESSION['BranchIDLog'];
+}
+	
+	
 	if (!empty($_GET['start_date']) && !empty($_GET['end_date'])) {
 		$start_date = $db->escapeString($fn->xss_clean($_GET['start_date']));
 		$end_date = $db->escapeString($fn->xss_clean($_GET['end_date']));
@@ -82,7 +89,7 @@ if (isset($_GET['table']) && $_GET['table'] == 'orders') {
 			$branch_id = $db->escapeString($fn->xss_clean($_GET['branch_id']));
 			if($branch_id!="All")
 			{
-				$where .= " where BranchID='".$branch_id."' ";
+				$where .= " where o.BranchID='".$branch_id."' ";
 			}
 		}
 	}
@@ -452,7 +459,7 @@ if (isset($_GET['table']) && $_GET['table'] == 'products') {
     $res = $db->getResult();
     foreach ($res as $row)
         $total = $row['total'];
-    $sql = "SELECT p.id AS id, p.name,p.status,p.tax_id, p.ratings,p.number_of_ratings,p.image, p.indicator, p.manufacturer, p.made_in, p.return_status, p.cancelable_status, p.till_status,p.description, pv.id as product_variant_id, pv.price, pv.discounted_price, pv.measurement, pv.serve_for, pv.stock,pv.stock_unit_id, u.short_code 
+    $sql = "SELECT p.id AS id, p.name,p.status,p.tax_id, p.ratings,p.number_of_ratings,p.image, p.indicator, p.manufacturer, p.made_in, p.return_status, p.cancelable_status, p.till_status,p.description, pv.id as product_variant_id, pv.price,pv.barcode, pv.discounted_price, pv.measurement, pv.serve_for, pv.stock,pv.stock_unit_id, u.short_code 
             FROM `products` p
             $join 
             $where ORDER BY $sort $order LIMIT $offset, $limit";
@@ -509,6 +516,7 @@ if (isset($_GET['table']) && $_GET['table'] == 'products') {
         $tempRow['product_id'] = $row['id'];
         $tempRow['tax_id'] = $row['tax_id'];
         $tempRow['name'] = $row['name'];
+        $tempRow['barcode'] = $row['barcode'];
         $tempRow['measurement'] =  $row['measurement'] == 0 ? $row['short_code']  : $row['measurement'] . " " . $row['short_code'];
         $tempRow['price'] = $currency . " " . $row['price'];
         $tempRow['indicator'] = $indicator;

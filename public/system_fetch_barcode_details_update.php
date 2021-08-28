@@ -35,11 +35,11 @@ if(isset($_POST['get_sr']) && isset($_POST['get_mainid']) && isset($_POST['get_o
 	 
 echo '<tr class="row">
 <td class="col-md-1 "><strong>Sr. No.</strong></td>
-<td class="col-md-3 "><strong>Product Name</strong></td>
+<td class="col-md-2 "><strong>Product Name</strong></td>
 <td class="col-md-2 "><strong>Variant Name</strong></td>
 <td class="col-md-2 "><strong>Price</strong></td>
 <td class="col-md-1 "><strong>Quantity</strong></td>
-<td class="col-md-1 "><strong>Tax</strong></td>
+<td class="col-md-2 "><strong>Tax</strong></td>
 <td class="col-md-2 "><strong>Total</strong></td>
 </tr>';
 
@@ -52,7 +52,7 @@ echo '<tr class="row">';
 echo '<td class="col-md-1">';
 echo '<input type="text" name="txt_sr[]" id="txt_sr'.$i.'" placeholder="Sr. No." value="'.$i.'" min="1" required class="form-control "  />';
 echo '</td>';
-echo '<td class="col-md-3">';
+echo '<td class="col-md-2">';
 echo '<input type="text" name="txt_product[]" id="txt_product'.$i.'" placeholder="Product Name" value="'.$show['name'].'" min="1" required class="form-control "  />';
 echo '</td>';
 echo '<td class="col-md-2">';
@@ -64,8 +64,8 @@ echo '</td>';
 echo '<td class="col-md-1">';
 echo '<input type="number" name="txt_quantity[]" id="txt_quantity'.$i.'" placeholder="Quantity" value="'.$show['qty'].'" min="1" onchange="getBarcodeDetailsUpdate('.$i.','.$show['mainid'].')" required class="form-control "  />';
 echo '</td>';
-echo '<td class="col-md-1">';
-echo '<input type="text" name="txt_tex[]" id="txt_tex'.$i.'" placeholder="Tax" value="'.$show['txa'].' ('.$show['title'].'%)" min="0" required class="form-control " readonly />';
+echo '<td class="col-md-2">';
+echo '<input type="text" name="txt_tex[]" id="txt_tex'.$i.'" placeholder="Tax" value="'.$show['txa'].' ('.$show['percentage'].'%)" min="0" required class="form-control " readonly />';
 echo '</td>';
 echo '<td class="col-md-2">';
 echo '<input type="text" name="txt_total[]" id="txt_total'.$i.'" placeholder="Total" value="'.$show['sub'].'" min="0" required class="form-control " readonly />';
@@ -75,8 +75,17 @@ echo '</tr>';
 $i++;
 
  }
- $showgrandtotal=mysqli_query($connect_db,"SELECT sum(sub_total) as grandtotal from posoders where SlNo='$SlNo'");
+ $showgrandtotal=mysqli_query($connect_db,"SELECT sum(sub_total) as grandtotal, sum(tax) as texamount from posoders where SlNo='$date_name'");
  $showgrand = mysqli_fetch_array($showgrandtotal);
+ 
+echo '<tr class="row">';
+echo '<td class="col-md-12 text-right" colspan="6">';
+echo '<label>Total Tax</label>';
+echo '</td>';
+echo '<td class="col-md-12">';
+echo '<input type="text" name="txt_taxamount" id="txt_taxamount" placeholder="Total Tax" value="'.$showgrand['texamount'].'" required class="form-control " readonly  />';
+echo '</td>';
+echo '</tr>';
 
 echo '<tr class="row">';
 echo '<td class="col-md-12 text-right" colspan="6">';

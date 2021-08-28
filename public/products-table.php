@@ -55,10 +55,12 @@ if ($permissions['products']['read'] == 1) {
                                     <th data-field="product_id" data-sortable="true">Product ID</th>
                                     <th data-field="tax_id" data-sortable="true">Tax ID</th>
                                     <th data-field="name" data-sortable="true">Name</th>
+									<th data-field="measurement" data-sortable="true">Measurement</th>
+									<th data-field="barcode" data-sortable="true">Barcode</th>
                                     <th data-field="image">Image</th>
                                     <th data-field="price" data-sortable="true">Price</th>
                                     <th data-field="discounted_price" data-sortable="true">D.Price</th>
-                                    <th data-field="measurement" data-sortable="true">Measurement</th>
+                                    
                                     <th data-field="stock" data-sortable="true">Stock</th>
                                     <th data-field="serve_for" data-sortable="true">Availability</th>
                                     <th data-field="indicator" data-sortable="true">Indicator</th>

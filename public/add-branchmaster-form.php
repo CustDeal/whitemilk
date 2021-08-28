@@ -45,6 +45,7 @@ if (isset($_POST['btnAdd'])) {
 		
 		if($txt_type==="1")
 		{
+			$role='POS';
 			if (empty($txt_username)) {
 				$error['txt_username'] = " <span class='label label-danger'>Required!</span>";
 			}
@@ -56,6 +57,7 @@ if (isset($_POST['btnAdd'])) {
 		}
 		else
 		{
+			$role = 'admin';
 			$txt_username=null;
 			$txt_password=null;
 		}
@@ -173,7 +175,7 @@ if (isset($_POST['btnAdd'])) {
 						<div class="form-group">
 						<div class='col-md-4'>
 						<label for="txt_type">Select Type</label> <i class="text-danger asterik">*</i>
-						<select id="txt_type" name="txt_type" placeholder="Select Type" required class="form-control" onchange="hideShowDiv()">
+						<select id="txt_type" name="txt_type" placeholder="Select Type" required class="form-control">
 						<option value="0">Branch</option>
 						<option value='1'>POS</option>
 						</select>
@@ -181,17 +183,17 @@ if (isset($_POST['btnAdd'])) {
 						</div>
 						</div>
 						
-							<div class="form-group" id="usern" style="display:none;">
+							<div class="form-group" id="usern">
                             <div class='col-md-4'>
                                 <label for="txt_username">UserName</label> <i class="text-danger asterik">*</i><?php echo isset($error['txt_username']) ? $error['txt_username'] : ''; ?>
-                                <input type="text" class="form-control" name="txt_username" id="txt_username" >
+                                <input type="text" class="form-control" name="txt_username" id="txt_username" required >
                             </div>
                             </div>
 							
-							<div class="form-group" id="passw"  style="display:none;">
+							<div class="form-group" id="passw" >
                             <div class='col-md-4'>
                                 <label for="txt_password">Password</label> <i class="text-danger asterik">*</i><?php echo isset($error['txt_password']) ? $error['txt_password'] : ''; ?>
-                                <input type="text" class="form-control" name="txt_password" id="txt_password" >
+                                <input type="text" class="form-control" name="txt_password" id="txt_password"  required >
                             </div>
                             </div>
 						

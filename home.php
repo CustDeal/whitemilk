@@ -52,7 +52,19 @@ $low_stock_limit = isset($config['low-stock-limit']) && (!empty($config['low-sto
                 <div class="col-lg-4 col-xs-6">
                     <div class="small-box bg-aqua">
                         <div class="inner">
-                            <h3><?= $function->rows_count('orders'); ?></h3>
+<h3>
+<?php if(isset($_SESSION['BranchIDLog']) && !empty($_SESSION['BranchIDLog']) && $_SESSION['BranchIDLog']!=null)
+{
+	$where = "BranchID='".$_SESSION['BranchIDLog']."'";
+?>
+
+                            <?= $function->rows_count('orders','*',$where); ?>
+<?php
+} else { 
+?>
+<?= $function->rows_count('orders'); ?>
+<?php } ?>
+							</h3>
                             <p>Orders</p>
                         </div>
                         <div class="icon"><i class="fa fa-shopping-cart"></i></div>
@@ -62,7 +74,19 @@ $low_stock_limit = isset($config['low-stock-limit']) && (!empty($config['low-sto
                 <div class="col-lg-4 col-xs-6">
                     <div class="small-box bg-yellow">
                         <div class="inner">
-                            <h3><?= $function->rows_count('products'); ?></h3>
+                            <h3>
+<?php if(isset($_SESSION['BranchIDLog']) && !empty($_SESSION['BranchIDLog']) && $_SESSION['BranchIDLog']!=null)
+{
+	$where = "BranchID='".$_SESSION['BranchIDLog']."'";
+?>
+
+                            <?= $function->rows_count('products','*',$where); ?>
+<?php
+} else { 
+?>
+<?= $function->rows_count('products'); ?>
+<?php } ?>
+</h3>
                             <p>Products</p>
                         </div>
                         <div class="icon"><i class="fa fa-cubes"></i></div>
@@ -72,7 +96,23 @@ $low_stock_limit = isset($config['low-stock-limit']) && (!empty($config['low-sto
                 <div class="col-lg-4 col-xs-6">
                     <div class="small-box bg-red">
                         <div class="inner">
-                            <h3><?= $function->rows_count('users'); ?></h3>
+                            <h3>
+<?php if(isset($_SESSION['BranchIDLog']) && !empty($_SESSION['BranchIDLog']) && $_SESSION['BranchIDLog']!=null)
+{
+	$where = "BranchID='".$_SESSION['BranchIDLog']."'";
+?>
+
+                            <?= $function->rows_count('users','*',$where); ?>
+<?php
+} else { 
+?>
+<?= $function->rows_count('users'); ?>
+<?php } ?>
+							
+							
+							
+							
+							</h3>
                             <p>Customers</p>
                         </div>
                         <div class="icon"><i class="fa fa-users"></i></div>
@@ -80,6 +120,9 @@ $low_stock_limit = isset($config['low-stock-limit']) && (!empty($config['low-sto
                     </div>
                 </div>
             </div>
+<?php if($role!="POS")
+{ 
+?>
             <div class="row">
                 <div class="col-lg-6 col-xs-6">
                     <div class="alert alert-danger alert-dismissible">
@@ -125,7 +168,7 @@ $low_stock_limit = isset($config['low-stock-limit']) && (!empty($config['low-sto
                 </div>
 
             </div>
-
+<?php } ?>
 
             <?php if ($permissions['orders']['read'] == 1) { ?>
                 <div class="row">

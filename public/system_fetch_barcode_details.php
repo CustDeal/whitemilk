@@ -24,11 +24,11 @@ if(isset($_POST['get_option']))
  $find=mysqli_query($connect_db,"SELECT a.*, a.id as variant_id, b.*,c.title,c.percentage,d.name as unitname FROM product_variant as a INNER JOIN products as b ON a.product_id=b.id INNER JOIN taxes as c ON b.tax_id = c.id INNER JOIN unit as d ON a.measurement_unit_id = d.id where a.barcode='$txt_user'");
 echo '<tr class="row">
 <td class="col-md-1 "><strong>Sr. No.</strong></td>
-<td class="col-md-3 "><strong>Product Name</strong></td>
+<td class="col-md-2 "><strong>Product Name</strong></td>
 <td class="col-md-2 "><strong>Variant Name</strong></td>
 <td class="col-md-2 "><strong>Price</strong></td>
 <td class="col-md-1 "><strong>Quantity</strong></td>
-<td class="col-md-1 "><strong>Tax</strong></td>
+<td class="col-md-2 "><strong>Tax</strong></td>
 <td class="col-md-2 "><strong>Total</strong></td>
 </tr>';
 
@@ -48,7 +48,7 @@ echo '<tr class="row">';
 echo '<td class="col-md-1">';
 echo '<input type="text" name="txt_sr[]" id="txt_sr'.$i.'" placeholder="Sr. No." value="'.$i.'" min="1" required class="form-control "  />';
 echo '</td>';
-echo '<td class="col-md-3">';
+echo '<td class="col-md-2">';
 echo '<input type="text" name="txt_product[]" id="txt_product'.$i.'" placeholder="Product Name" value="'.$show['name'].'" min="1" required class="form-control "  />';
 echo '</td>';
 echo '<td class="col-md-2">';
@@ -60,8 +60,8 @@ echo '</td>';
 echo '<td class="col-md-1">';
 echo '<input type="number" name="txt_quantity[]" id="txt_quantity'.$i.'" placeholder="Quantity" value="'.$show['qty'].'" min="1" onchange="getBarcodeDetailsUpdate('.$i.','.$show['mainid'].')" required class="form-control "  />';
 echo '</td>';
-echo '<td class="col-md-1">';
-echo '<input type="text" name="txt_tex[]" id="txt_tex'.$i.'" placeholder="Tax" value="'.$show['txa'].' ('.$show['title'].'%)" min="0" required class="form-control " readonly />';
+echo '<td class="col-md-2">';
+echo '<input type="text" name="txt_tex[]" id="txt_tex'.$i.'" placeholder="Tax" value="'.$show['txa'].' ('.$show['percentage'].'%)" min="0" required class="form-control " readonly />';
 echo '</td>';
 echo '<td class="col-md-2">';
 echo '<input type="text" name="txt_total[]" id="txt_total'.$i.'" placeholder="Total" value="'.$show['sub'].'" min="0" required class="form-control " readonly />';
@@ -71,8 +71,17 @@ echo '</tr>';
 $i++;
 
  }
- $showgrandtotal=mysqli_query($connect_db,"SELECT sum(sub_total) as grandtotal from posoders where SlNo='$date_name'");
+ $showgrandtotal=mysqli_query($connect_db,"SELECT sum(sub_total) as grandtotal, sum(tax) as texamount from posoders where SlNo='$date_name'");
  $showgrand = mysqli_fetch_array($showgrandtotal);
+ 
+echo '<tr class="row">';
+echo '<td class="col-md-12 text-right" colspan="6">';
+echo '<label>Total Tax</label>';
+echo '</td>';
+echo '<td class="col-md-12">';
+echo '<input type="text" name="txt_taxamount" id="txt_taxamount" placeholder="Total Tax" value="'.$showgrand['texamount'].'" required class="form-control " readonly  />';
+echo '</td>';
+echo '</tr>';
 
 echo '<tr class="row">';
 echo '<td class="col-md-12 text-right" colspan="6">';
@@ -87,11 +96,11 @@ echo '</tr>';
  {
 echo '<tr class="row">
 <td class="col-md-1 "><strong>Sr. No.</strong></td>
-<td class="col-md-3 "><strong>Product Name</strong></td>
+<td class="col-md-2 "><strong>Product Name</strong></td>
 <td class="col-md-2 "><strong>Variant Name</strong></td>
 <td class="col-md-2 "><strong>Price</strong></td>
 <td class="col-md-1 "><strong>Quantity</strong></td>
-<td class="col-md-1 "><strong>Tax</strong></td>
+<td class="col-md-2 "><strong>Tax</strong></td>
 <td class="col-md-2 "><strong>Total</strong></td>
 </tr>';
  $showlist=mysqli_query($connect_db,"SELECT a.id as mainid, a.price as cost, a.quantity as qty, a.tax as txa, a.sub_total as sub, b.*, c.*, d.title,d.percentage,e.name as unitname from posoders as a INNER JOIN product_variant AS b ON a.varient_id=b.id INNER JOIN products as c ON a.product_id=c.id INNER JOIN taxes as d ON c.tax_id = d.id INNER JOIN unit as e ON b.measurement_unit_id = e.id where a.SlNo='$date_name'");
@@ -102,7 +111,7 @@ echo '<tr class="row">';
 echo '<td class="col-md-1">';
 echo '<input type="text" name="txt_sr[]" id="txt_sr'.$i.'" placeholder="Sr. No." value="'.$i.'" min="1" required class="form-control "  />';
 echo '</td>';
-echo '<td class="col-md-3">';
+echo '<td class="col-md-2">';
 echo '<input type="text" name="txt_product[]" id="txt_product'.$i.'" placeholder="Product Name" value="'.$show['name'].'" min="1" required class="form-control "  />';
 echo '</td>';
 echo '<td class="col-md-2">';
@@ -114,8 +123,8 @@ echo '</td>';
 echo '<td class="col-md-1">';
 echo '<input type="number" name="txt_quantity[]" id="txt_quantity'.$i.'" placeholder="Quantity" value="'.$show['qty'].'" min="1" onchange="getBarcodeDetailsUpdate('.$i.','.$show['mainid'].')" required class="form-control "  />';
 echo '</td>';
-echo '<td class="col-md-1">';
-echo '<input type="text" name="txt_tex[]" id="txt_tex'.$i.'" placeholder="Tax" value="'.$show['txa'].' ('.$show['title'].'%)" min="0" required class="form-control " readonly />';
+echo '<td class="col-md-2">';
+echo '<input type="text" name="txt_tex[]" id="txt_tex'.$i.'" placeholder="Tax" value="'.$show['txa'].' ('.$show['percentage'].'%)" min="0" required class="form-control " readonly />';
 echo '</td>';
 echo '</td>';
 echo '<td class="col-md-2">';
@@ -127,8 +136,17 @@ $i++;
 
  }
  
- $showgrandtotal=mysqli_query($connect_db,"SELECT sum(sub_total) as grandtotal from posoders where SlNo='$date_name'");
+ $showgrandtotal=mysqli_query($connect_db,"SELECT sum(sub_total) as grandtotal, sum(tax) as texamount from posoders where SlNo='$date_name'");
  $showgrand = mysqli_fetch_array($showgrandtotal);
+ 
+echo '<tr class="row">';
+echo '<td class="col-md-12 text-right" colspan="6">';
+echo '<label>Total Tax</label>';
+echo '</td>';
+echo '<td class="col-md-12">';
+echo '<input type="text" name="txt_taxamount" id="txt_taxamount" placeholder="Total Tax" value="'.$showgrand['texamount'].'" required class="form-control " readonly  />';
+echo '</td>';
+echo '</tr>';
 
 echo '<tr class="row">';
 echo '<td class="col-md-12 text-right" colspan="6">';

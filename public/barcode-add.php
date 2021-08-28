@@ -33,7 +33,7 @@ if(isset($_POST['btnAdd']))
     $txt_mobile = "000000000";
     $txt_latitude = "00.00000";
     $txt_longitude = "00.00000";
-    $txt_delivery = "31";
+    $txt_delivery = "NA";
     $txt_sub = "normal";
 	$ordered_by = "2";
 	$delivery_charge=0;
@@ -71,6 +71,7 @@ if(isset($_POST['btnAdd']))
 			}
 			
 			$error['add_menu'] = " <section class='content-header'><span class='label label-success'>Order Added Successfully</span></section>";
+			echo'<script>location.replace("invoice.php?id='.$last_id.'")</script>';
 					
 		}
 		
@@ -111,17 +112,13 @@ if(isset($_POST['btnAdd']))
                 <!-- /.box-header -->
                 <!-- form start -->
                 <form id='orders-add' method="post" enctype="multipart/form-data" action="">
-<div class="row">
-<div class="col-md-12">
-
-<div class="col-md-4">
-<label class="control-label" for="txt_barcode">Barcode</label><i class="text-danger asterik">*</i>
-<input type="text" name="txt_barcode" id="txt_barcode" value="" required class="form-control "  autofocus onchange="getBarcodeDetails()" />
-<br/>
-</div>
-
-</div>
-</div>
+                    <!-- /.box-body -->
+                    <div class="box-footer text-right">
+                        <input type="submit" class="btn-primary btn" value="Submit" name="btnAdd" />&nbsp;
+                        <input type="reset" class="btn-danger btn" value="Clear" id="btnClear" />
+                        <!--<div  id="res"></div>-->
+                    </div>
+					<hr>
 						
 <div class="row">
 <div class="col-md-12">
@@ -141,12 +138,18 @@ if(isset($_POST['btnAdd']))
 </div>
 </div>
 							
-                    <!-- /.box-body -->
-                    <div class="box-footer">
-                        <input type="submit" class="btn-primary btn" value="Add" name="btnAdd" />&nbsp;
-                        <input type="reset" class="btn-danger btn" value="Clear" id="btnClear" />
-                        <!--<div  id="res"></div>-->
-                    </div>
+
+<div class="row">
+<div class="col-md-12">
+
+<div class="col-md-12">
+<label class="control-label" for="txt_barcode">Barcode</label><i class="text-danger asterik">*</i>
+<input type="text" name="txt_barcode" id="txt_barcode" value="" class="form-control "  autofocus onchange="getBarcodeDetails()" style="height: 100px !important;" />
+<br/>
+</div>
+
+</div>
+</div>
                 </form>
             </div>
             <!-- /.box -->
@@ -179,6 +182,9 @@ function fetch_select(val)
  },
  success: function (response) {
   document.getElementById("dynamic_field").innerHTML=response; 
+  var input = document.getElementById("txt_barcode");
+input.focus ();
+document.getElementById("txt_barcode").value="";
  }
  });
 }
