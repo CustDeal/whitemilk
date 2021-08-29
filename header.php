@@ -322,6 +322,19 @@ $res_logo = $db->getResult();
                            
                         </ul>
                     </li>
+					
+                    <li class="treeview">
+                        <a href="#">
+                            <i class="fa fa-bullseye"></i>
+                            <span>Batch Group</span>
+                            <i class="fa fa-angle-right pull-right"></i>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="add-batch.php"><i class="fa fa-plus"></i> Add Batch</a></li>
+                            <li><a href="batch.php"><i class="fa fa-sliders"></i> Manage Batch</a></li>
+                           
+                        </ul>
+                    </li>
 
                 <li class="treeview">
                     <a href="#">

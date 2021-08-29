@@ -196,7 +196,7 @@ $order_list = $encoded_items;
                     </thead>
                     <tbody>
                         <?php
-                        $sql_total = 'select total from orders where id=' . $ID;
+                        $sql_total = 'select * from orders where id=' . $ID;
                         $db->sql($sql_total);
                         $res_total = $db->getResult();
                         ?>
@@ -248,7 +248,7 @@ $order_list = $encoded_items;
                         <th></th>
                         <th>Total</th>
                         <td>&nbsp;&nbsp;&nbsp;&nbsp;<?= $qty ?><br></td>
-                        <td>&nbsp;&nbsp;&nbsp;&nbsp;<?= $res_total[0]['total']; ?><br></td>
+                        <td>&nbsp;&nbsp;&nbsp;&nbsp;<?= $res_total[0]['final_total']; ?><br></td>
                     </tr>
                 </table>
             </div><!-- /.col -->
@@ -273,7 +273,7 @@ $order_list = $encoded_items;
                         <th></th>
                         <tr>
                             <th>Total Order Price (<?= $currency; ?>)</th>
-                            <td><?php echo '+ ' . $res_total[0]['total']; ?></td>
+                            <td><?php echo '+ ' . $res_total[0]['total'] * $qty; ?></td>
                         </tr>
                         <tr>
                             <th>Delivery Charge (<?= $currency; ?>)</th>
@@ -303,7 +303,7 @@ $order_list = $encoded_items;
                         </tr>
                         <th>Final Total (<?= $currency; ?>)</th>
                         <?php
-                        $total = $res_total[0]['total'];
+                        $total = $res_total[0]['total'] * $qty;
                         $delivery_charge = $res_outer[0]['delivery_charge'];
                         $tax_amount = $res_outer[0]['tax_amount'];
                         $promo_discount = $res_outer[0]['promo_discount'];

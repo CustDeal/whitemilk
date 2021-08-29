@@ -75,7 +75,7 @@ echo '</tr>';
 $i++;
 
  }
- $showgrandtotal=mysqli_query($connect_db,"SELECT sum(sub_total) as grandtotal, sum(tax) as texamount from posoders where SlNo='$date_name'");
+ $showgrandtotal=mysqli_query($connect_db,"SELECT sum(sub_total) as grandtotal, sum(tax) as texamount from posoders where SlNo='$SlNo'");
  $showgrand = mysqli_fetch_array($showgrandtotal);
  
 echo '<tr class="row">';
